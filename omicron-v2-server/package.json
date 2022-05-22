@@ -1,0 +1,33 @@
+{
+  "name": "omicron",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Paulo Scheuer Gomes",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "db": "knex migrate:latest --knexfile knexfile.ts",
+    "db-r": "knex migrate:rollback",
+    "db-r-all": "knex migrate:rollback --all",
+    "db-s": "knex --knexfile knexfile.ts seed:run"
+  },
+  "dependencies": {
+    "celebrate": "^15.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "0.95.15",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/joi": "^17.2.3",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/knex": "^0.16.1",
+    "ts-node": "^10.4.0",
+    "tsc": "^2.0.4",
+    "typescript": "^4.5.5"
+  }
+}
