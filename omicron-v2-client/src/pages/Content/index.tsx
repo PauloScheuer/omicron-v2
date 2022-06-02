@@ -5,7 +5,15 @@ import { useParams } from 'react-router-dom';
 import Calculator from './Calculator';
 import Card from '../../components/Card';
 import Layout from '../../components/Layout';
-import { CardType } from '../../utils/types';
+import { CardType, FieldType } from '../../utils/types';
+
+
+const fields : FieldType[] = [
+  {name:"y",initialValue:23},
+  {name:"a",initialValue:4},
+  {name:"x"},
+  {name:"b",initialValue:3},
+];
 
 const Content = () => {
   const { title } = useParams();
@@ -14,7 +22,7 @@ const Content = () => {
       <div className="md:px-32 px-10 py-20">
         <h1 className="text-secundary font-bold text-4xl text-center">{title}</h1>
         <div className="flex lg:flex-nowrap flex-wrap justify-between items-baseline mt-20">
-          <Calculator fields={['a','b','c']}/>
+          <Calculator fields={fields}/>
           <Card title="Sobre" 
                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 

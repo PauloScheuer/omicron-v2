@@ -9,9 +9,6 @@ import { Link } from 'react-router-dom';
 
 const listFilters = ['Todos', '1º ano', '2º ano', '3º ano'];
 
-// const listContents = ['Função Afim', 'Função Quadrática', 'Progressão Aritmética', 'Progressão Geométrica',
-// 'Função Exponencial', 'Logaritmo', 'Análise Combinatória']
-
 export default function Contents() {
   const [selected, setSelected] = useState<number>(0);
   const [contents, setContents] = useState([]);

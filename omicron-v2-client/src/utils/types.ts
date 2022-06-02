@@ -3,3 +3,8 @@ export enum CardType{
     cdContentText = 1,
     cdPerson = 2
 }
+
+export type FieldType  = {
+    name:string;
+    initialValue?:number;
+  }
