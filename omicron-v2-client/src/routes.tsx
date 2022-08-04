@@ -18,7 +18,7 @@ const Routes = () => {
       <Route component={Register} path="/cadastro" exact />
       <Route component={Forum} path="/forum" exact />
       <Route component={Contents} path="/conteudos" exact />
-      <Route component={Content} path="/conteudos/:title" exact />
+      <Route component={Content} path="/conteudos/:index" exact />
       <Route component={Userpage} path="/userpage" exact />
     </BrowserRouter>
   );

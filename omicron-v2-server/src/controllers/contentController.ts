@@ -42,16 +42,28 @@ class ContentController {
   }
   async show(req: Request, res: Response) {
     try {
-      const id = req.params.id;
-      const data = await knex('contents').select().where('idContent', '=', id);
+      const index = req.params.index;
+      const dataContent = await knex('contents')
+      .select().where('indexContent', '=', index);
 
-      if (data.length === 0) {
-        throw new Error('Contéudo não encontrado');
+      if (dataContent.length === 0) {
+        throw new Error('Conteúdo não encontrado');
+      }
+
+      let fields = await knex('fields')
+      .select('idField','nameField','invisibleField').where('idContent', '=', dataContent[0].idContent);
+
+      for (let nIndex = 0;nIndex<fields.length;nIndex++){
+        const steps = await knex('steps')
+        .select('textStep','orderStep','hintStep','evaluateStep','notShowStep','replaceStep')
+        .where('idField', '=', fields[nIndex].idField);
+        fields[nIndex].steps = steps;
+        delete fields[nIndex].idField;
       }
 
       res
         .status(200)
-        .send({ message: 'Conteúdo encontrado', content: data[0] });
+        .send({ message: 'Conteúdo encontrado', content: {...dataContent[0], fields} });
     } catch (err) {
       res.status(400).send('Operação não realizada - ' + err);
     }
@@ -64,7 +76,7 @@ class ContentController {
         data = await knex('contents').select('*');
       } else {
         data = await knex('contents')
-          .select()
+          .select(['nameContent','textContent','levelContent','neededFieldsContent','indexContent'])
           .where('levelContent', '=', level);
       }
       res

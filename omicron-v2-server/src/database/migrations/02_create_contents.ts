@@ -6,7 +6,8 @@ export async function up(knex: Knex) {
     table.string('nameContent', 100).notNullable();
     table.string('textContent', 2000).notNullable();
     table.integer('levelContent', 1).notNullable();
-    table.integer('indexContent').notNullable();
+    table.integer('neededFieldsContent',2).notNullable();
+    table.integer('indexContent').notNullable().unique();
   });
 }
 export async function down(knex: Knex) {

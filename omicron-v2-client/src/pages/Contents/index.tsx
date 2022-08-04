@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {CardType} from '../../utils/types';
+import {CardType, ContentType} from '../../utils/types';
 import api from '../../services/api';
 
 import Layout from '../../components/Layout';
@@ -11,7 +11,7 @@ const listFilters = ['Todos', '1º ano', '2º ano', '3º ano'];
 
 export default function Contents() {
   const [selected, setSelected] = useState<number>(0);
-  const [contents, setContents] = useState([]);
+  const [contents, setContents] = useState<ContentType[]>([]);
 
   useEffect(() => {
     //função que procura os conteúdos
@@ -39,9 +39,9 @@ export default function Contents() {
       <h3 className="font-bold text-3xl text-primaryDark mb-8">Resultados</h3>
       <div className="flex flex-wrap justify-center sm:justify-start">
         {contents.length > 0 ?
-        contents.map(({nameContent, textContent})=>{
+        contents.map(({nameContent, textContent, indexContent})=>{
           return(
-            <Link to={`/conteudos/${nameContent}`}>
+            <Link to={`/conteudos/${indexContent}`} key={indexContent}>
               <Card 
                 title={nameContent} 
                 text={textContent}

@@ -4,7 +4,31 @@ export enum CardType{
     cdPerson = 2
 }
 
+export type ContentType = {
+    nameContent:string;
+    textContent:string;
+    levelContent:number;
+    neededFieldsContent:number;
+    indexContent:number;
+    fields:FieldType[];
+}
+
+export type StepType = {
+    textStep:string;
+    evaluateStep?:boolean;
+    notshowStep?:boolean;
+    replaceStep?:boolean;
+}
+
 export type FieldType  = {
-    name:string;
-    initialValue?:number;
-  }
+    nameField:string;
+    value?:number;
+    invisibleField?:boolean;
+    steps?:StepType[]
+}
+
+export type CalculatorField = {
+    [key: string]: (number | undefined);
+}
+
+export type CalculatorFieldEntry = [string, number | undefined];

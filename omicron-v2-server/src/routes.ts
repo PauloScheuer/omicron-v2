@@ -106,7 +106,7 @@ routes.post(
   contentController.create
 );
 routes.delete('/content/delete/:id', authAdmin, contentController.delete);
-routes.get('/content/show/:id', contentController.show);
+routes.get('/content/show/:index', contentController.show);
 routes.get('/content/index', contentController.index);
 routes.put(
   '/content/edit/:id',
