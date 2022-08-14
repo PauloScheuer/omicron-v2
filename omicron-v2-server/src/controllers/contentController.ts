@@ -56,7 +56,8 @@ class ContentController {
       for (let nIndex = 0;nIndex<fields.length;nIndex++){
         const steps = await knex('steps')
         .select('textStep','orderStep','hintStep','evaluateStep','notShowStep','replaceStep')
-        .where('idField', '=', fields[nIndex].idField);
+        .where('idField', '=', fields[nIndex].idField).orderBy('orderStep');
+        console.log(fields[nIndex].idField)
         fields[nIndex].steps = steps;
         delete fields[nIndex].idField;
       }

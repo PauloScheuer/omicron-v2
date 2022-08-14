@@ -21,7 +21,7 @@ export async function seed(knex: Knex) {
     //   nameContent: 'Função Exponencial',
     //   textContent: '<p>Uma função exponencial é aquela onde o x, que representa a variável, está no expoente, e não na base. Na calculadora encontrada nessa página, usa-se o formato f(x)=ax+b, pelo b permitir a existência de um valor inicial, o que é útil em certos casos que a função exponencial engloba.</p><p>Para ser uma função exponencial, há certas restrições de valores. Para a, não são possíveis valores negativos, o 0 e o 1. A restrição aos números negativos se deve a possibilidade do expoente representar uma raíz que não possua valores reais em caso de números negativos. Para o 0, a explicação vem da exponenciação: se x for 0 e tivermos então 00, teria-se um valor indeterminado. Quanto ao 1, o motivo é que ele, elevado a qualquer número, é igual a 1, então teria-se uma função constante.</p><p>Por fim, uma função exponencial pode ser classificada, assim como a afim, como crescente ou decrescente. Para saber qual a classificação, basta observar o valor de a. Quando a>1, a função é crescente, enquanto a<1 gera uma função decrescente.</p>',
     //   levelContent: 1,
-    //   indexContent: 102
+    //   indexContent: 102,
     // },
     // {
     //   nameContent: 'Função Logarítmica',
@@ -59,18 +59,20 @@ export async function seed(knex: Knex) {
     //   levelContent: 1,
     //   indexContent: 108
     // },
-    // {
-    //   nameContent: 'Arranjo',
-    //   textContent: '<p>Um arranjo é um agrupamento de p elementos dentro de um conjunto de n elementos. Uma propriedade importante de um arranjo é que nele, a ordem dos elementos faz diferença, e por isso, precisa-se tomar cuidado ao escolher se esse é o melhor cálculo a seer utilizado para a situação.</p><p>Um exemplo de situação onde é necessário usar arranjo é na pergunta: Quantos números de 3 algarismos pode-se formar com os algarismos 1,2 e 3. Para responder essa pergunta, deve-se atentar que 123 é diferente de 321, e portanto, trata-se de um arranjo.</p><p>A fórmula para o arranjo é de n!/(n-p)!, onde n é o número total de elementos de um conjuto e p o tamanho do agrupamento. No exemplo acima, teria-se que n=3 e p=3, pois temos 3 algarismos utilizáveis (n) e o conjunto formado terá tamanho 3 (p). Você pode conferir a resposta para esse problema utilizando nossa calculadora.</p>',
-    //   levelContent: 2,
-    //   indexContent: 200
-    // },
-    // {
-    //   nameContent: 'Combinação',
-    //   textContent: '<p>Uma combinação é um agrupamento de p elementos dentro de um conjunto de n elementos. Uma propriedade importante de uma combinação é que nela, a ordem dos elementos não importa, e por isso, precisa-se tomar cuidado ao escolher se esse é o melhor cálculo a ser utilizado para a situação.</p><p>Um exemplo de situação onde é necessário usar combinação é ao se calcular o número de jogos possíveis a se fazer ao apostar na mega-sena. Para responder essa pergunta, deve-se perceber que um jogo com 1,2,3,4,5,6 e outro 2,3,4,5,6,1 são iguais perante ao jogo e portanto, trata-se de uma combinação.</p><p>A fórmula para a combinação é de n!/(p!(n-p)!), onde n é o número total de elementos de um conjuto e p o tamanho do agrupamento. No exemplo acima, teria-se que n=60 e p=6, pois temos 60 algarismos utilizáveis (n) e o conjunto formado terá tamanho 6 (p). Você pode conferir a resposta para esse problema utilizando nossa calculadora.</p>',
-    //   levelContent: 2,
-    //   indexContent: 201
-    // },
+    {
+      nameContent: 'Arranjo',
+      textContent: '<p>Um arranjo é um agrupamento de p elementos dentro de um conjunto de n elementos. Uma propriedade importante de um arranjo é que nele, a ordem dos elementos faz diferença, e por isso, precisa-se tomar cuidado ao escolher se esse é o melhor cálculo a seer utilizado para a situação.</p><p>Um exemplo de situação onde é necessário usar arranjo é na pergunta: Quantos números de 3 algarismos pode-se formar com os algarismos 1,2 e 3. Para responder essa pergunta, deve-se atentar que 123 é diferente de 321, e portanto, trata-se de um arranjo.</p><p>A fórmula para o arranjo é de n!/(n-p)!, onde n é o número total de elementos de um conjuto e p o tamanho do agrupamento. No exemplo acima, teria-se que n=3 e p=3, pois temos 3 algarismos utilizáveis (n) e o conjunto formado terá tamanho 3 (p). Você pode conferir a resposta para esse problema utilizando nossa calculadora.</p>',
+      levelContent: 2,
+      indexContent: 200,
+      neededFieldsContent: 2
+    },
+    {
+      nameContent: 'Combinação',
+      textContent: '<p>Uma combinação é um agrupamento de p elementos dentro de um conjunto de n elementos. Uma propriedade importante de uma combinação é que nela, a ordem dos elementos não importa, e por isso, precisa-se tomar cuidado ao escolher se esse é o melhor cálculo a ser utilizado para a situação.</p><p>Um exemplo de situação onde é necessário usar combinação é ao se calcular o número de jogos possíveis a se fazer ao apostar na mega-sena. Para responder essa pergunta, deve-se perceber que um jogo com 1,2,3,4,5,6 e outro 2,3,4,5,6,1 são iguais perante ao jogo e portanto, trata-se de uma combinação.</p><p>A fórmula para a combinação é de n!/(p!(n-p)!), onde n é o número total de elementos de um conjuto e p o tamanho do agrupamento. No exemplo acima, teria-se que n=60 e p=6, pois temos 60 algarismos utilizáveis (n) e o conjunto formado terá tamanho 6 (p). Você pode conferir a resposta para esse problema utilizando nossa calculadora.</p>',
+      levelContent: 2,
+      indexContent: 201,
+      neededFieldsContent:2
+    },
     // {
     //   nameContent: 'Probabilidade',
     //   textContent: '<p>Uma probabilidade de um evento acontecer é definida através da divisão entre o número de eventos favoráveis pelo espaço amostral, ou seja, o número total de eventos possíveis. Podemos tomar com exemplo de evento a chance de, ao se jogar um dado, obtermos um número menor que 4. Nesse caso, o conjunto de eventos favoráveis é {1,2,3}, enquanto o conjunto do espaço amostral é {1,2,3,4,5,6}. Assim, a probabilidade de tal evento acontecer é de 3/6 = 0.5, ou 50%.</p><p>Pode-se nota que uma probabilidade sempre estará entre 0 e 1 (ou 0% e 100%). Isso se deve ao fato de que os eventos favoráveis são subconjuntos de um espaço amostral, e assim, não podem ultrapassar seu valor.</p>',
@@ -95,18 +97,20 @@ export async function seed(knex: Knex) {
     //   levelContent: 2,
     //   indexContent: 205
     // },
-    // {
-    //   nameContent: 'Juros Simples',
-    //   textContent: '<p>O juro (J) é um valor cobrado como remuneração ou compensação em cima de uma compra ou empréstimo, ou seja, operações que envolvam dinheiro no geral. Outros conceitos importantes de se saber ao ter um primeiro contato com esse contéudo são o de capital inicial (C), o valor empregado inicialmente na operação, o de montante (M), a soma do capital com os juros, e o de taxa (i), a parte do capital que se transformará em juros. Além desses valores, temos o tempo (t), que deve estar sempre proporcional a taxa (por exemplo, se a taxa é cobrada ao mês, o tempo estará em meses).</p><p>No caso de juros simples, temos que a taxa é cobrada sempre em cima do valor inicial, de C, tendo então sua fórmula como J = C*i*t. O montante de uma operação a juros simples é de M = C + C.i.t, uma fórmula que possui o formato de uma função afim, e portanto, seu gráfico é linear.</p>',
-    //   levelContent: 3,
-    //   indexContent: 300
-    // },
-    // {
-    //   nameContent: 'Juros Compostos',
-    //   textContent: '<p>O juro (J) é um valor cobrado como remuneração ou compensação em cima de uma compra ou empréstimo, ou seja, operações que envolvam dinheiro no geral. Outros conceitos importantes de se saber ao ter um primeiro contato com esse contéudo são o de capital inicial (C), o valor empregado inicialmente na operação, o de montante (M), a soma do capital com os juros, e o de taxa (i), a parte do capital que se transformará em juros. Além desses valores, temos o tempo (t), que deve estar sempre proporcional a taxa (por exemplo, se a taxa é cobrada ao mês, o tempo estará em meses).</p><p>No caso de juros compostos, temos que a taxa é cobrada sempre em cima do valor atual da aplicação, ou seja, é um tipo de operação onde há juros sobre juros. A fórmula do montante de uma operação a juros compostos é de M = C*(1+i)t, que por possuir o formato de uma função exponencial, tem seu gráfico dessa maneira.</p>',
-    //   levelContent: 3,
-    //   indexContent: 301
-    // },
+    {
+      nameContent: 'Juros Simples',
+      textContent: '<p>O juro (J) é um valor cobrado como remuneração ou compensação em cima de uma compra ou empréstimo, ou seja, operações que envolvam dinheiro no geral. Outros conceitos importantes de se saber ao ter um primeiro contato com esse contéudo são o de capital inicial (C), o valor empregado inicialmente na operação, o de montante (M), a soma do capital com os juros, e o de taxa (i), a parte do capital que se transformará em juros. Além desses valores, temos o tempo (t), que deve estar sempre proporcional a taxa (por exemplo, se a taxa é cobrada ao mês, o tempo estará em meses).</p><p>No caso de juros simples, temos que a taxa é cobrada sempre em cima do valor inicial, de C, tendo então sua fórmula como J = C*i*t. O montante de uma operação a juros simples é de M = C + C.i.t, uma fórmula que possui o formato de uma função afim, e portanto, seu gráfico é linear.</p>',
+      levelContent: 3,
+      indexContent: 300,
+      neededFieldsContent: 3
+    },
+    {
+      nameContent: 'Juros Compostos',
+      textContent: '<p>O juro (J) é um valor cobrado como remuneração ou compensação em cima de uma compra ou empréstimo, ou seja, operações que envolvam dinheiro no geral. Outros conceitos importantes de se saber ao ter um primeiro contato com esse contéudo são o de capital inicial (C), o valor empregado inicialmente na operação, o de montante (M), a soma do capital com os juros, e o de taxa (i), a parte do capital que se transformará em juros. Além desses valores, temos o tempo (t), que deve estar sempre proporcional a taxa (por exemplo, se a taxa é cobrada ao mês, o tempo estará em meses).</p><p>No caso de juros compostos, temos que a taxa é cobrada sempre em cima do valor atual da aplicação, ou seja, é um tipo de operação onde há juros sobre juros. A fórmula do montante de uma operação a juros compostos é de M = C*(1+i)t, que por possuir o formato de uma função exponencial, tem seu gráfico dessa maneira.</p>',
+      levelContent: 3,
+      indexContent: 301,
+      neededFieldsContent: 3
+    },
     // {
     //   nameContent: 'Pontos Distantes',
     //   textContent: '<p>A geometria analítica é uma área da matemática cujos estudos começaram com René Descartes, quando o mesmo sugeriu a união entre os estudos da álgebra e da geometria. Nessa área da geometria, todos os conceitos da geometria euclidiana podem ser aplicados juntos à álgebra. Sua principal característica é a utilização de um plano de coordenadas, conhecido como cartesiano, para a disposição de pontos, retas e figuras.</p><p>A distância entre dois pontos na geometria analítica é o menor segmento que liga ambos, sendo sempre uma reta. Para seu cálculo, deve-se calcular a diferença entre seus valores de x e de y, criando assim um triângulo retângulo que terá como catetos |xb-xa| e |yb-ya| e como hipotenusa a distância entre os dois pontos. Sabendo o valor dos catetos, encontra-se a distância entre os pontos através da fórmula de Pitágoras.</p>',

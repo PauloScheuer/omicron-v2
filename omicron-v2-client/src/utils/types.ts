@@ -22,7 +22,7 @@ export type StepType = {
 
 export type FieldType  = {
     nameField:string;
-    value?:number;
+    value?:string;
     invisibleField?:boolean;
     steps?:StepType[]
 }

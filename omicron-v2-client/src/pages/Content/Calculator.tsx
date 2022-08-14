@@ -21,7 +21,8 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
     const index = formData.findIndex(item=>item.nameField === name);
     const newFormData = [...formData];
     if (newFormData[index] !== undefined){
-      newFormData[index].value = value !== '' ? Number(value) : undefined;
+      console.log(value);
+      newFormData[index].value = value !== '' ? value : undefined;
       setFormData(newFormData);
     }
   }
@@ -33,24 +34,32 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
   }
 
   const doCalc = ()=>{
-    let res : string[] = [];
-    const math = create(all);
-    let scope : CalculatorField = {};
-    formData.forEach(field=>{
-      scope[field.nameField] = field.value;
-    });
+    try{
+      let res : string[] = [];
+      const math = create(all);
+      let scope : CalculatorField = {};
+      formData.forEach(field=>{
+        scope[field.nameField] = field.value !== undefined ? Number(field.value) : undefined;
+      });
 
-    const countValid = formData.reduce((acc,cur)=>{
-      return cur.value !== undefined ? acc + 1 : acc;
-    },0);
+      const countValid = formData.reduce((acc,cur)=>{
+        return cur.value !== undefined ? acc + 1 : acc;
+      },0);
 
 
-    if(countValid !== neededFields){
-      alert('Erro de execução na calculadora');
-    }else{
+      if(countValid !== neededFields){
+        alert(`Você deve preencher ${neededFields} campos.`);
+        return
+      }
+
       const missingField = formData.find(item=> item.value === undefined)?.nameField || '';
       const steps:StepType[] = getSteps(missingField);
-      console.log(steps)
+
+      if(steps.length === 0){
+        alert(`Cálculo não definido para a configuração informada.`);
+        return
+      }
+
       let tempStr : string;
       let valueAsNum : number;
       steps.forEach(step=>{
@@ -59,9 +68,10 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
           for (const [key, value] of Object.entries(scope).sort((a : CalculatorFieldEntry,b : CalculatorFieldEntry)=>{
             return b[0].length - a[0].length;
           })) {
-            valueAsNum = value || Number.MAX_SAFE_INTEGER;
+            valueAsNum = (value !== undefined) ? value : Number.MAX_SAFE_INTEGER;
+
             if(valueAsNum !== Number.MAX_SAFE_INTEGER){
-              tempStr = tempStr.replace(key,''+valueAsNum+'');
+              tempStr = tempStr.replaceAll(key,''+valueAsNum+'');
             }
           }
         }
@@ -74,8 +84,10 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
           res.push(tempStr);
         }
       })
+      setResult(res);
+    }catch(e){
+      alert(e);
     }
-    setResult(res);
   }
   
   return (
@@ -94,7 +106,7 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
         return !field.invisibleField && (
           <div className="w-60 flex items-baseline justify-between" key={field.nameField}>
             <span>{field.nameField}:</span>
-            <Input placeholder={field.nameField} name={field.nameField} value={field.value || ''} setValue={handleInputChange} style={`w-48 mb-3`}/>
+            <Input placeholder={field.nameField} name={field.nameField} value={field.value === undefined ? '' : field.value} setValue={handleInputChange} style={`w-48 mb-3`}/>
           </div>
         )
         
@@ -102,7 +114,7 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
       <Button value="Calcular" action={()=>doCalc()} style={`mt-8`}/>
       <div>
         {result.map((step, index)=>{
-          return <Tex2SVG latex={step}/>
+          return <Tex2SVG latex={step} key={index}/>
         })}
       </div>
     </form>

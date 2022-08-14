@@ -42,6 +42,76 @@ export async function seed(knex: Knex) {
       nameField: 'c',
       invisibleField: false,
       idContent: 2
-    }
+    },
+    {
+      nameField: 'a',
+      invisibleField: true,
+      idContent: 3,
+    },
+    {
+      nameField: 'n',
+      invisibleField: false,
+      idContent: 3,
+    },
+    {
+      nameField: 'p',
+      invisibleField: false,
+      idContent: 3,
+    },
+    {
+      nameField: 'C',
+      invisibleField: true,
+      idContent: 4,
+    },
+    {
+      nameField: 'n',
+      invisibleField: false,
+      idContent: 4,
+    },
+    {
+      nameField: 'p',
+      invisibleField: false,
+      idContent: 4,
+    },
+    {
+      nameField: 'J',
+      invisibleField: false,
+      idContent:5
+    },
+    {
+      nameField: 'C',
+      invisibleField: false,
+      idContent:5
+    },
+    {
+      nameField: 'i',
+      invisibleField: false,
+      idContent:5
+    },
+    {
+      nameField: 't',
+      invisibleField: false,
+      idContent:5
+    },
+    {
+      nameField: 'M',
+      invisibleField: false,
+      idContent:6
+    },
+    {
+      nameField: 'C',
+      invisibleField: false,
+      idContent:6
+    },
+    {
+      nameField: 'i',
+      invisibleField: false,
+      idContent:6
+    },
+    {
+      nameField: 't',
+      invisibleField: false,
+      idContent:6
+    },
   ]);
 }
