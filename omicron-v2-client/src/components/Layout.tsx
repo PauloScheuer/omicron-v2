@@ -9,11 +9,11 @@ interface LayoutType {
 
 function Layout({ children }: LayoutType) {
   return (
-    <>
+    <div className="bg-light">
       <Header />
       <Main>{children}</Main>
       <Footer />
-    </>
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, Dispatch, useEffect, useState } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -7,13 +7,16 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import api from '../../services/api';
 import { emailRegex } from '../../utils/emailRegex';
+import {connect} from 'react-redux';
+import {login} from '../../store/actions/user';
+import {UserType, Action} from '../../utils/types';
 
 interface LoginDataI{
   emailUser: string;
   keyUser: string;
 }
 
-export default function Login() {
+const Login = (props:any) => {
   const [sendEnabled, setSendEnabled] = useState<boolean>(false);
   const [data, setData] = useState<LoginDataI>({
     emailUser: '',
@@ -31,11 +34,18 @@ export default function Login() {
     try {
       const result = await api.post('user/login', data);
       if (result.status !== 200) {
+        alert('Erro no login. Tente novamente');
         return;
       }
 
       alert(result.data.message);
-      console.log(result.data);
+      props.onLogin({
+        token:result.data.token,
+        name:result.data.nameUser,
+        email:result.data.emailUser,
+        level:result.data.levelUser,
+        id:result.data.idUser
+      })
       history.push('/');
     } catch (err) {
       alert(
@@ -85,3 +95,14 @@ export default function Login() {
     </div>
   );
 }
+
+const mapDispatchToProps = (dispatch:Dispatch<Action>) =>{
+  return{
+    onLogin: (user:UserType) => {
+      localStorage.setItem('token',user.token);
+      dispatch(login(user))
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Login)

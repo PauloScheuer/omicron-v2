@@ -32,3 +32,16 @@ export type CalculatorField = {
 }
 
 export type CalculatorFieldEntry = [string, number | undefined];
+
+export type UserType={
+    name: string;
+    email: string;
+    level: number;
+    id: number;
+    token: string
+}
+
+export type Action={
+    type: string,
+    payload: UserType
+}

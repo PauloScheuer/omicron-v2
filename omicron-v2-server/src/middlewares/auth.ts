@@ -5,7 +5,6 @@ import { user, admin } from '../config/auth';
 // Função para autenticação de um usuário comum
 const authUser = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
-  console.log(req.headers.authorization);
   if (!authHeader) {
     return res.status(401).send({ error: 'Nenhum token recebido' });
   }

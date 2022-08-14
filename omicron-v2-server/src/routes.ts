@@ -38,6 +38,7 @@ routes.post(
 );
 routes.delete('/user/delete/:id', authUser, userController.delete);
 routes.get('/user/show/:id', userController.show);
+routes.get('/user/show',authUser, userController.show);
 routes.put(
   '/user/edit/:id',
   celebrate(
@@ -45,7 +46,7 @@ routes.put(
       body: Joi.object().keys({
         newEmail: Joi.string().required().max(100),
         newName: Joi.string().required().max(200),
-        newLevel: Joi.number().required().max(3),
+        newLevel: Joi.number().required().max(4),
       }),
     },
     {

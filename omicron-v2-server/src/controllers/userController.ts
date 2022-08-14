@@ -63,8 +63,12 @@ class UserController {
   }
   async show(req: Request, res: Response) {
     try {
-      const id = req.params.id;
-      const data = await knex('users').select().where('idUser', '=', id);
+      let id = req.params.id;
+      console.log(id);
+      if (id == null){
+        id = req.body.idToken;
+      }
+      const data = await knex('users').select('idUser','nameUser','emailUser','levelUser').where('idUser', '=', id);
 
       if (data.length === 0) {
         throw new Error('Usuário não encontrado');
@@ -82,6 +86,11 @@ class UserController {
       const newEmail = req.body.newEmail;
       const newName = req.body.newName;
       const newLevel = req.body.newLevel;
+      const idToken = req.body.idToken;
+
+      if (id !== idToken){
+        throw new Error('Usuário não autenticado');
+      }
 
       const userExists = await knex('users')
         .select('*')
@@ -89,10 +98,11 @@ class UserController {
       if (userExists.length === 0) {
         throw new Error('Usuário não encontrado');
       }
+
       const emailExists = await knex('users')
         .select('*')
         .where('emailUser', '=', newEmail);
-      if (emailExists.length !== 0) {
+      if ((emailExists.length !== 0) && (emailExists[0].idUser != id)) {
         throw new Error('Email já cadastrado');
       }
 
@@ -100,7 +110,7 @@ class UserController {
         .update({ emailUser: newEmail, nameUser: newName, levelUser: newLevel })
         .where('idUser', '=', id)
         .returning('*');
-      res.status(200).send({ message: 'Usuário editado!', user: newData });
+      res.status(200).send({ message: 'Usuário editado!', user: {emailUser:newEmail,nameUser:newName,levelUser:newLevel} });
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }
@@ -148,6 +158,9 @@ class UserController {
       res.status(200).send({
         message: 'Usuário logado',
         idUser: userExists[0].idUser,
+        nameUser: userExists[0].nameUser,
+        emailUser: userExists[0].emailUser,
+        levelUser: userExists[0].levelUser,
         token: generateToken(userExists[0].idUser, userExists[0].isAdmin),
       });
     } catch (err) {

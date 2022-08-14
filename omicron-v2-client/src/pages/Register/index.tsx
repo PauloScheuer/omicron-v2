@@ -6,6 +6,7 @@ import registerImage from '../../assets/images/register.svg';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import api from '../../services/api';
+import { scholarityOptions } from '../../utils/consts';
 import {emailRegex} from '../../utils/emailRegex';
 
 interface RegisterDataI{
@@ -14,8 +15,6 @@ interface RegisterDataI{
   level: number;
   key: string;
 }
-
-const options = ['Formado', '1º ano', '2º ano', '3º ano'];
 
 export default function Register() {
   const [sendEnabled, setSendEnabled] = useState<boolean>(false);
@@ -45,7 +44,7 @@ export default function Register() {
       }
 
       alert(result.data.message);
-      history.push('/');
+      history.push('/login');
     } catch (err) {
       alert(
         'Erro no cadastro. Tente usar outro email ou aguarde alguns minutos e tente novamente.'
@@ -77,7 +76,7 @@ export default function Register() {
         </div>
         <Input placeholder='Email' name="email" style={`w-64 mt-12`} type="email" value={data.email} setValue={event=>handleDataChange(event)}/>
         <Input placeholder='Nome' name="name" style={`w-64 mt-4`} value={data.name} setValue={event=>handleDataChange(event)}/>
-        <Input placeholder='Escolaridade' name="level" style={`w-64 mt-4`} type="select" value={data.level} options={options} setValue={event=>handleDataChange(event)}/>
+        <Input placeholder='Escolaridade' name="level" style={`w-64 mt-4`} type="select" value={data.level} options={scholarityOptions} setValue={event=>handleDataChange(event)}/>
         <Input placeholder='Senha' name="key" style={`w-64 mt-4`} type="password" value={data.key} setValue={event=>handleDataChange(event)}/>
         <Button value="Avançar" style={`mt-12`} enabled={sendEnabled} color={2} action={handleSubmit}/>
         <Link to="/login">

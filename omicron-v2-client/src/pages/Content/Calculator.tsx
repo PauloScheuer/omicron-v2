@@ -51,7 +51,6 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
       const steps:StepType[] = getSteps(missingField);
       let tempStr : string;
       let valueAsNum : number;
-      console.log(steps);
       steps.forEach(step=>{
         tempStr = step.textStep;
         if(step.replaceStep){

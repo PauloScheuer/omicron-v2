@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
+import getToken from '../utils/getToken';
 
-export default function Header() {
+const Header = (props:any) => {
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
-  const logged = false;
+  const logged = props.token !== '';
   return (
     <header className="absolute w-full top-0 bg-primary text-light flex h-28 justify-between items-center rounded-b">
       <span className="cursor-pointer font-extrabold text-3xl md:ml-16 ml-8">
@@ -43,3 +45,9 @@ export default function Header() {
     </header>
   );
 }
+
+const mapStateToProps = (state:any)=>{
+  return{token: getToken(state.user)}
+}
+
+export default connect(mapStateToProps,null)(Header)

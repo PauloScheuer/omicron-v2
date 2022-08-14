@@ -23,7 +23,7 @@ const Content = () => {
       }
     };
     searchContents();
-  }, []);
+  }, [index]);
   return( 
     <Layout>
         {content && (
