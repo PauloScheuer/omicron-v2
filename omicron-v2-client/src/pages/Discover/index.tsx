@@ -9,6 +9,7 @@ import DescAndFilter from '../../components/DescAndFilter';
 interface DiscoverI{
   nameDiscover: string;
   textDiscover: string;
+  imgDiscover: string;
 }
 
 export default function Discover() {
@@ -21,12 +22,13 @@ export default function Discover() {
       try {
         const res = await api.get('discover/index');
         setDiscovers(res.data.discovers);
+        console.log(res.data.discovers)
       } catch (err) {
         alert(err);
       }
     };
     searchDiscovers();
-  }, [selected]);
+  }, []);
 
   return <Layout>
     <div className="md:px-32 px-10 py-20">
@@ -43,6 +45,7 @@ export default function Discover() {
           <Card 
           title={discovers[selected].nameDiscover} 
           text={discovers[selected].textDiscover}
+          img={discovers[selected].imgDiscover}
           kind={CardType.cdPerson}
           />
       </>

@@ -4,10 +4,11 @@ import { CardType } from '../utils/types';
 interface CardI{
   title : string;
   text  : string;
+  img?  : string;
   kind  : CardType;
 }
 
-const Card = ({title, text, kind}:CardI) => {
+const Card = ({title, text, kind,img}:CardI) => {
   return (
     <div className={`bg-white rounded-lg flex-none 
       ${kind === CardType.cdContentItem ? 
@@ -24,6 +25,11 @@ const Card = ({title, text, kind}:CardI) => {
                       'text-center h-12' :
                       'h-12'
                     }`}>{title}</h3>
+      {img && (
+        <div className=" mb-6">
+          <img src={`http://localhost:3333/images/${img}`} alt={title} className="rounded max-w-icon"/>
+        </div>
+      )}
       <div dangerouslySetInnerHTML={{__html:text}} className={`${kind === CardType.cdContentItem && 'max-h-24 text-ellipsis overflow-hidden'}`}></div>
       {kind === CardType.cdContentItem && (<p>...</p>)}
     </div>

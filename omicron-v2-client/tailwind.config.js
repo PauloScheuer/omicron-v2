@@ -21,6 +21,9 @@ module.exports = {
       },
       spacing:{
         '128':'32rem'
+      },
+      maxWidth:{
+        'icon': '12rem'
       }
     },
 
