@@ -5,6 +5,7 @@ import Input from '../../components/Input';
 import { FieldType, CalculatorField, CalculatorFieldEntry, StepType } from '../../utils/types';
 import {create, all} from 'mathjs';
 import Tex2SVG from "react-hook-mathjax";
+import ReactTooltip from 'react-tooltip';
 
 interface CalculatorI{
   fields: FieldType[];
@@ -81,9 +82,11 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
     <div className="flex flex-col items-center bg-white py-16 w-full mb-8 lg:w-5/12 lg:mr-8 lg:mb-0 rounded-lg">
       <div className="relative w-full">
         <h2 className="text-primaryDark font-bold h-16 text-3xl mb-6 text-center">Calculadora</h2>
+        <ReactTooltip effect="solid"/>
         <FiHelpCircle
           className="text-secundary absolute sm:right-10 right-2 top-2"
           size={24}
+          data-tip={`É necessário o preenchimento de ${neededFields} campos da calculadora`}
           />
       </div>
       <form className="flex flex-col items-center">
