@@ -30,7 +30,7 @@ export default function Contents() {
     <div className="md:px-32 px-10 py-20">
       <DescAndFilter 
         title="Conteúdos" 
-        subtitle="Acesse mais de XX conteúdos divididos em diferentes níveis"
+        subtitle={`Acesse mais de ${contents.length-1} conteúdos divididos em diferentes níveis`}
         caption="Selecione um filtro:"
         listOfOptions={listFilters}
         selected={selected}

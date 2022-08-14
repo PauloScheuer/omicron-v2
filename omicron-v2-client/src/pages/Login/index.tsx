@@ -64,7 +64,7 @@ const Login = (props:any) => {
 
   return (
     <div className="flex h-screen lg:justify-between justify-center items-center box-border px-32">
-      <form className="bg-white h-5/6 py-20 md:px-24 px-10 flex flex-col rounded-xl items-center relative shadow-primary">
+      <form className="bg-white py-20 md:px-24 px-10 flex flex-col rounded-xl items-center relative shadow-primary">
         <div className="flex items-center justify-between w-full">
           <Link to="/">
             <FiArrowLeft

@@ -22,10 +22,10 @@ const Input = ({placeholder, name, value, setValue, style, type, options}:InputI
         onChange={setValue}
       />
     ) : (
-      <select className={`${style} bg-light px-4 py-3 rounded-md focus:outline-none`} onChange={setValue} name={name}>
-        <option value={-1} selected={value === -1}>Selecione uma opção</option>
+      <select className={`${style} bg-light px-4 py-3 rounded-md focus:outline-none`} value={value} onChange={setValue} name={name}>
+        <option value={-1}>Selecione uma opção</option>
         {options?.map((str,i)=>{
-          return  <option value={i} selected={value === i}>{str}</option>
+          return  <option value={i} key={i}>{str}</option>
         })}
       </select>
     )

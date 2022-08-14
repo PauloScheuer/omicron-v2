@@ -44,7 +44,6 @@ class UserController {
       const idUser = await knex('users').insert(newUser).returning('idUser');
       res.status(200).send({ message: 'Usuário cadastrado', id: idUser });
     } catch (err) {
-      console.log(err);
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }
   }
@@ -64,7 +63,6 @@ class UserController {
   async show(req: Request, res: Response) {
     try {
       let id = req.params.id;
-      console.log(id);
       if (id == null){
         id = req.body.idToken;
       }
@@ -164,7 +162,6 @@ class UserController {
         token: generateToken(userExists[0].idUser, userExists[0].isAdmin),
       });
     } catch (err) {
-      console.log(err)
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }
   }

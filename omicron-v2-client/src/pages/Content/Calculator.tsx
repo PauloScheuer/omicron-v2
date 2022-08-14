@@ -45,10 +45,11 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
 
 
     if(countValid !== neededFields){
-      console.log('error');
+      alert('Erro de execução na calculadora');
     }else{
       const missingField = formData.find(item=> item.value === undefined)?.nameField || '';
       const steps:StepType[] = getSteps(missingField);
+      console.log(steps)
       let tempStr : string;
       let valueAsNum : number;
       steps.forEach(step=>{
@@ -66,11 +67,9 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
         if (step.evaluateStep){
           tempStr = 'R=' + math.evaluate(tempStr,scope);
         }
-        if (!step.notshowStep){
-          console.log('before:'+tempStr);
+        if (!step.notShowStep){
           const expression = math.parse(tempStr)
           tempStr = expression.toTex();
-          console.log('after:'+tempStr);
           res.push(tempStr);
         }
       })

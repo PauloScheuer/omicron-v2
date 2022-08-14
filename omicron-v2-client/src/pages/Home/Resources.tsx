@@ -4,11 +4,11 @@ import learning from '../../assets/images/learning.svg';
 
 export default function Resources() {
   return (
-    <section className="h-screen text-primaryDark md:pl-40 md:pr-40">
-      <h2 className="font-bold text-5xl text-center pt-10 mb-16">
+    <section className="text-primaryDark md:pl-40 md:pr-40">
+      <h2 className="font-bold text-5xl text-center pt-10 pb-10">
         Nossos recursos
       </h2>
-      <div className="md:flex items-center">
+      <div className="md:flex items-center pb-20">
         <div className="md:w-1/2 px-4 ">
           <p className="font-normal text-2xl ">
             Contamos com uma vasta coleção de textos e calculadoras passo a

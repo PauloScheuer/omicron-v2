@@ -21,7 +21,6 @@ export default function Discover() {
       try {
         const res = await api.get('discover/index');
         setDiscovers(res.data.discovers);
-        console.log(res.data.discovers)
       } catch (err) {
         alert(err);
       }

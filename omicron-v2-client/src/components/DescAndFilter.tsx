@@ -10,7 +10,6 @@ interface DescAndFilterI{
 }
 
 export default function DescAndFilter({title, subtitle, caption, listOfOptions, selected, setSelected}:DescAndFilterI) {
-
   return (
     <>
       <div className="flex flex-col justify-between md:w-128 mb-16">
@@ -26,6 +25,7 @@ export default function DescAndFilter({title, subtitle, caption, listOfOptions, 
                 onClick={()=>setSelected(i)}
                 className={`flex-none w-32 py-3 mr-4 mb-4 rounded-lg font-medium text-center cursor-pointer
                 ${selected !== i ? "bg-white text-dark" : "bg-secundary text-primaryDark"}`}
+                key={i}
               >
                 <span>{option}</span>
               </div>

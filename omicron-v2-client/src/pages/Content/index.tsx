@@ -17,7 +17,6 @@ const Content = () => {
       try {
         const res = await api.get('content/show/'+index);
         setContent(res.data.content);
-        console.log(res.data.content)
       } catch (err) {
         alert(err);
       }

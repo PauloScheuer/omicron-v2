@@ -130,7 +130,6 @@ const Userpage = (props:any) => {
   },[authData]);
 
   useEffect(()=>{
-    console.log('aqui');
     checkData();
     // eslint-disable-next-line
   },[]);

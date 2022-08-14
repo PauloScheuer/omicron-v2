@@ -16,7 +16,7 @@ export type ContentType = {
 export type StepType = {
     textStep:string;
     evaluateStep?:boolean;
-    notshowStep?:boolean;
+    notShowStep?:boolean;
     replaceStep?:boolean;
 }
 
