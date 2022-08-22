@@ -22,7 +22,7 @@ export default function Contents() {
         const res = await api.get('content/index',{params: {level: selected}});
         setContents(res.data.contents);
 
-        if(selected == 0){
+        if(selected === 0){
           setCount(res.data.contents.length)
         }
       } catch (err) {

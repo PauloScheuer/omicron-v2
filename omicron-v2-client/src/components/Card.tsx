@@ -27,7 +27,7 @@ const Card = ({title, text, kind,img}:CardI) => {
                     }`}>{title}</h3>
       {img && (
         <div className=" mb-6">
-          <img src={`http://localhost:3333/images/${img}`} alt={title} className="rounded max-w-icon"/>
+          <img src={`${process.env.REACT_APP_BASE_URL}/images/${img}`} alt={title} className="rounded max-w-icon"/>
         </div>
       )}
       <div dangerouslySetInnerHTML={{__html:text}} className={`${kind === CardType.cdContentItem && 'max-h-24 text-ellipsis overflow-hidden'}`}></div>
