@@ -11,7 +11,9 @@ const listFilters = ['Todos', '1º ano', '2º ano', '3º ano'];
 
 export default function Contents() {
   const [selected, setSelected] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
   const [contents, setContents] = useState<ContentType[]>([]);
+
 
   useEffect(() => {
     //função que procura os conteúdos
@@ -19,6 +21,10 @@ export default function Contents() {
       try {
         const res = await api.get('content/index',{params: {level: selected}});
         setContents(res.data.contents);
+
+        if(selected == 0){
+          setCount(res.data.contents.length)
+        }
       } catch (err) {
         alert(err);
       }
@@ -30,7 +36,7 @@ export default function Contents() {
     <div className="md:px-32 px-10 py-20">
       <DescAndFilter 
         title="Conteúdos" 
-        subtitle={`Acesse mais de ${contents.length-1} conteúdos divididos em diferentes níveis`}
+        subtitle={`Acesse mais de ${count-1} conteúdos divididos em diferentes níveis`}
         caption="Selecione um filtro:"
         listOfOptions={listFilters}
         selected={selected}

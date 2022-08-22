@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { Dispatch, useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import getToken from '../utils/getToken';
+import { Action, ActionWithoutParam } from '../utils/types';
+import {logout} from '../store/actions/user';
+import { useHistory } from 'react-router-dom';
 
 const Header = (props:any) => {
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const logged = props.token !== '';
+
+  const history = useHistory();
+
+  const handleLogout = ()=>{
+    props.onLogout()
+    alert('Logout realizado')
+    history.push('/')
+  }
+
   return (
     <header className="absolute w-full top-0 bg-primary text-light flex h-28 justify-between items-center rounded-b">
       <span className="cursor-pointer font-extrabold text-3xl md:ml-16 ml-8">
@@ -36,11 +48,20 @@ const Header = (props:any) => {
         <div className="md:mt-0 mt-8 cursor-pointer mr-6 font-semibold text-xl">
           <Link to="/forum">Fórum</Link>
         </div>
-        <div className="md:mt-0 mt-8 cursor-pointer mr-6 font-semibold text-xl">
-          {logged ?
-            <Link to="/userpage">Userpage</Link> :
-            <Link to="/login">Login</Link>}
-        </div>
+        {logged ?
+          <>
+            <div className="md:mt-0 mt-8 cursor-pointer mr-6 font-semibold text-xl">
+              <Link to="/userpage">Userpage</Link>
+            </div>
+            <div className="md:mt-0 mt-8 cursor-pointer mr-6 font-semibold text-xl">
+              <p onClick={()=>handleLogout()}>Logout</p>
+            </div>
+          </>
+        :
+          <div className="md:mt-0 mt-8 cursor-pointer mr-6 font-semibold text-xl">
+            <Link to="/login">Login</Link>
+          </div>
+        }
       </section>
     </header>
   );
@@ -50,4 +71,13 @@ const mapStateToProps = (state:any)=>{
   return{token: getToken(state.user)}
 }
 
-export default connect(mapStateToProps,null)(Header)
+const mapDispatchToProps = (dispatch:Dispatch<Action | ActionWithoutParam>) =>{
+  return{
+    onLogout: () => {
+      localStorage.removeItem('token');
+      dispatch(logout());
+    }
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Header)

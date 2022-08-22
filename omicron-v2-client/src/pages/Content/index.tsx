@@ -7,10 +7,12 @@ import Card from '../../components/Card';
 import Layout from '../../components/Layout';
 import { CardType, ContentType } from '../../utils/types';
 import api from '../../services/api';
+import { useHistory } from 'react-router-dom';
 
 const Content = () => {
   const [content, setContent] = useState<ContentType>();
   const { index } = useParams();
+  const history = useHistory();
   useEffect(() => {
     //função que procura os conteúdos
     const searchContents = async () => {
@@ -18,10 +20,12 @@ const Content = () => {
         const res = await api.get('content/show/'+index);
         setContent(res.data.content);
       } catch (err) {
-        alert(err);
+        alert('Conteúdo não encontrado!');
+        history.push('/conteudos')
       }
     };
     searchContents();
+    //eslint-disable-next-line
   }, [index]);
   return( 
     <Layout>

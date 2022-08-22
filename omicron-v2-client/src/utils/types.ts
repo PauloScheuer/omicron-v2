@@ -45,3 +45,7 @@ export type Action={
     type: string,
     payload: UserType
 }
+
+export type ActionWithoutParam={
+    type: string
+}

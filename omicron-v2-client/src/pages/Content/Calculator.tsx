@@ -21,7 +21,6 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
     const index = formData.findIndex(item=>item.nameField === name);
     const newFormData = [...formData];
     if (newFormData[index] !== undefined){
-      console.log(value);
       newFormData[index].value = value !== '' ? value : undefined;
       setFormData(newFormData);
     }
@@ -75,9 +74,11 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
             }
           }
         }
+
         if (step.evaluateStep){
           tempStr = 'R=' + math.evaluate(tempStr,scope);
         }
+
         if (!step.notShowStep){
           const expression = math.parse(tempStr)
           tempStr = expression.toTex();

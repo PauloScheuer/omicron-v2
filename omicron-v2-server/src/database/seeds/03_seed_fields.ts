@@ -109,7 +109,7 @@ export async function seed(knex: Knex) {
       idContent:6
     },
     {
-      nameField: 't',
+      nameField: 'T',
       invisibleField: false,
       idContent:6
     },

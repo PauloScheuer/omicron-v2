@@ -1,4 +1,4 @@
-import {UserType, Action} from '../../utils/types';
+import {UserType, Action, ActionWithoutParam} from '../../utils/types';
 import {USER_LOGGED_IN, USER_LOGGED_OUT, USER_EDITED} from '../../utils/consts';
 
 export const login = (user:UserType) : Action=>{
@@ -15,7 +15,7 @@ export const edit = (user:UserType) : Action=>{
   }
 }
 
-export const logout = ()=>{
+export const logout = () : ActionWithoutParam =>{
   return{
     type: USER_LOGGED_OUT
   }
