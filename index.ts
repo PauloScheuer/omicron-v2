@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import routes from './routes';
+import routes from './src/routes';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,9 +11,11 @@ const port = process.env.PORT || 3333;
 
 app.use(express.json());
 
-app.use(cors({ origin: process.env.CLIENT}));
+app.use(cors());
 
-app.use('/images', express.static(path.resolve(__dirname, 'database', 'images')));
+app.use(express.static(path.join(path.resolve(), 'client/build')));
+
+app.use('/images', express.static(path.resolve(__dirname, 'src','database', 'images')));
 
 app.use(routes);
 
