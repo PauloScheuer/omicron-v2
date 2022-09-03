@@ -12,7 +12,7 @@
     "db-r-all": "knex migrate:rollback --all",
     "db-s": "knex --knexfile knexfile.ts seed:run",
     "build": "tsc",
-    "heroku-postbuild": "cd client && yarn && yarn start"
+    "heroku-postbuild": "cd client && yarn && yarn build"
   },
   "dependencies": {
     "celebrate": "^15.0.1",
