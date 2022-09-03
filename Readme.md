@@ -22,4 +22,4 @@
 
 ----------------
 
-Para efeitos de comparação, ver https://github.com/PauloScheuer/omicron, versão original do sistema desenvolvida para o trabalho de conclusão de curso do Técnico em Informática no Instituto Federal Farroupilha
+Para efeitos de comparação, ver https://github.com/PauloScheuer/omicron, versão original do sistema desenvolvida para o TCC do curso Técnico em Informática no Instituto Federal Farroupilha
