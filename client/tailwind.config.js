@@ -24,6 +24,9 @@ module.exports = {
       },
       maxWidth:{
         'icon': '12rem'
+      },
+      minWidth:{
+        '32':'8rem'
       }
     },
 

@@ -23,11 +23,11 @@ export default function DescAndFilter({title, subtitle, caption, listOfOptions, 
             return (
               <div 
                 onClick={()=>setSelected(i)}
-                className={`flex-none w-32 py-3 mr-4 mb-4 rounded-lg font-medium text-center cursor-pointer
+                className={`flex-none min-w-32 py-3 px-4 mr-4 mb-4 rounded-lg font-medium text-center cursor-pointer
                 ${selected !== i ? "bg-white text-dark" : "bg-secundary text-primaryDark"}`}
                 key={i}
               >
-                <span>{option}</span>
+                <span className="">{option}</span>
               </div>
             )
           })}

@@ -49,3 +49,21 @@ export type Action={
 export type ActionWithoutParam={
     type: string
 }
+
+export enum ParamOrderType{
+    date = 0,
+    likes = 1
+}
+  
+export enum KindOrderType{
+    asc = 0,
+    desc = 1
+}
+
+export type QuestionType={
+    title:string,
+    text:string,
+    user:string,
+    when:Date,
+    likes:number
+}

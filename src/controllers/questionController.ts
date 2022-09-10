@@ -1,6 +1,16 @@
 import { Request, Response } from 'express';
 import knex from '../database/connection';
 
+enum ParamOrderType{
+  date = 0,
+  likes = 1
+}
+
+enum KindOrderType{
+  asc = 0,
+  desc = 1
+}
+
 class QuestionController {
   async create(req: Request, res: Response) {
     try {
@@ -85,21 +95,50 @@ class QuestionController {
       const content = Number(req.query.content);
       const user = Number(req.query.user);
 
+      const total = await knex('questions').count();
+      const pages = Math.ceil(Number(total[0]['count(*)']) / perPage);
+
+      let order;
+      let by;
+      if(Number(req.query.order) == ParamOrderType.date){
+        order = 'whenQuestion'
+      }else{
+        order = 'whenQuestion' //todo
+      }
+
+      if(Number(req.query.by) == KindOrderType.asc){
+        by = 'asc'
+      }else{
+        by = 'desc'
+      }
+
       const data = await knex('questions')
-        .select()
+        .join('users','users.idUser','=','questions.idUser')
+        .join('contents','contents.idContent','=','questions.idContent')
+        .select('titleQuestion','textQuestion','nameUser','whenQuestion')
         .limit(perPage)
         .offset(offset)
-        .where('idContent', '=', content)
-        .or.where('idUser', '=', user)
-        .orderBy('whenQuestion', 'desc');
+        .where('indexContent', '=', content)
+        .or.where('users.idUser', '=', user)
+        .orderBy(order, by);
 
       if (data.length === 0) {
         throw new Error('Questões não encontradas');
       }
 
+      const questions = data.map(q=>{
+        return{
+          title:q.titleQuestion,
+          text:q.textQuestion,
+          when:q.whenQuestion,
+          user:q.nameUser,
+          likes:49
+        }
+      })
+
       res
         .status(200)
-        .send({ message: 'Questões encontradas', questions: data });
+        .send({ message: 'Questões encontradas', questions, pages});
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }
