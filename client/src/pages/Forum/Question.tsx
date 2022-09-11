@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FiArrowRight, FiHeart } from 'react-icons/fi';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import api from '../../services/api';
+import getToken from '../../utils/getToken';
 
 interface QuestionI{
   title : string;
@@ -8,10 +11,48 @@ interface QuestionI{
   when : Date;
   user : string;
   likes : number;
+  id : number;
+  idLikeSt : number;
   alone?: boolean;
+  token?: string
 }
 
-export default function Question({title,text,when,user,likes,alone=false}:QuestionI) {
+const Question = ({title,text,when,user,likes,id,idLikeSt,alone=false,token}:QuestionI)=>{
+  const [idLike, setIdLike] = useState<number>(idLikeSt);
+  const [adaptLikes,setAdaptLikes] = useState<number>(likes);
+
+  const handleLike = async ()=>{
+    try {
+      const res = await api.post('like/create',{
+        type:'question',
+        id,
+      },{
+        headers:{
+          authorization:'BEARER '+token
+        }
+      })
+
+      setIdLike(res.data.id);
+      setAdaptLikes(res.data.newCount);
+    } catch (err) {
+      alert('Erro ao curtir publicação!')
+    }
+  }
+
+  const handleDislike = async ()=>{
+    try {
+      const res = await api.delete('like/delete/'+idLike,{
+        headers:{
+          authorization:'BEARER '+token
+        }
+      })
+      setIdLike(-1);
+      setAdaptLikes(res.data.newCount);
+    } catch (err) {
+      alert('Erro ao curtir publicação!')
+    }
+  }
+
   return (
     <div className="bg-white rounded-lg flex-none md:px-16 px-8 py-10 mb-8">
       <div className="mb-6">
@@ -21,11 +62,15 @@ export default function Question({title,text,when,user,likes,alone=false}:Questi
       <p className="">{text}</p>
       <div className="flex justify-between mt-8">
         <div className="flex">
-          <FiHeart className="text-dark cursor-pointer" size={24}/>
-          <span className="font-medium ml-2">{likes}</span>
+          {idLike === -1 ? (
+            <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/>
+          ) : (
+            <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/>
+          )}
+          <span className="font-medium ml-2">{adaptLikes}</span>
         </div>
         {!alone && (
-          <Link to="/forum/respostas/1" className="flex">
+          <Link to={'/forum/respostas/'+id} className="flex">
             <span className="font-medium">Ver respostas</span>
             <FiArrowRight className="text-secundary ml-2" size={24}/>
           </Link>
@@ -34,3 +79,9 @@ export default function Question({title,text,when,user,likes,alone=false}:Questi
     </div>
   )
 }
+
+const mapStateToProps = (state:any)=>{
+  return{token: getToken(state.user)}
+}
+
+export default connect(mapStateToProps,null)(Question);

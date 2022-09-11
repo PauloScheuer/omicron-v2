@@ -2,7 +2,6 @@ import React from 'react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import Button from '../../components/Button';
 import { KindOrderType, ParamOrderType } from '../../utils/types';
-import Pagination from './Pagination';
 
 interface FiltersI{
   paramOrder: ParamOrderType;
@@ -52,7 +51,8 @@ export default function Filters({paramOrder,kindOrder,setParamOrder,setKindOrder
         </div>
       </div>
       <hr className="h-8 bg-primary lg:w-px w-0 ml-2 mr-2" />
-      <Button action={action} value="Procurar" style="lg:ml-2"/>
+      {/* eslint-disable-next-line */}
+      <Button action={()=>action(1)} value="Procurar" style="lg:ml-2"/>
     </div>
     {pagination}
   </div>

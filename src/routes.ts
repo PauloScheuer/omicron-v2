@@ -188,7 +188,7 @@ routes.post(
 );
 routes.delete('/answer/delete/:id', authUser, answerController.delete);
 routes.get('/answer/show/:id', answerController.show);
-routes.get('/answer/index', answerController.index);
+routes.get('/answer/index/:id', answerController.index);
 routes.patch(
   '/answer/edit/:id',
   celebrate(
@@ -209,7 +209,6 @@ routes.patch(
 
 routes.post('/like/create', authUser, likeController.create);
 routes.delete('/like/delete/:id', authUser, likeController.delete);
-routes.get('/like/index', likeController.index);
 
 //discover routes
 routes.post(

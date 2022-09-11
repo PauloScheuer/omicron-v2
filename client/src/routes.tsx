@@ -20,7 +20,7 @@ const Routes = () => {
       <Route component={Register} path="/cadastro" exact />
       <Route component={ForumList} path="/forum" exact />
       <Route component={Forum} path="/forum/:index" exact />
-      <Route component={Answers} path="/forum/respostas/:index" exact />
+      <Route component={Answers} path="/forum/respostas/:id" exact />
       <Route component={Contents} path="/conteudos" exact />
       <Route component={Content} path="/conteudos/:index" exact />
       <Route component={Userpage} path="/userpage" exact />

@@ -65,5 +65,16 @@ export type QuestionType={
     text:string,
     user:string,
     when:Date,
-    likes:number
+    id:number,
+    likes:number,
+    idLike:number
+}
+
+export type AnswerType={
+    text:string,
+    user:string,
+    when:Date,
+    id:number,
+    likes:number,
+    idLike:number
 }

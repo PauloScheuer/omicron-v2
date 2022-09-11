@@ -1,15 +1,6 @@
 import { Request, Response } from 'express';
 import knex from '../database/connection';
-
-enum ParamOrderType{
-  date = 0,
-  likes = 1
-}
-
-enum KindOrderType{
-  asc = 0,
-  desc = 1
-}
+import { KindOrderType, ParamOrderType } from '../utils/types';
 
 class QuestionController {
   async create(req: Request, res: Response) {
@@ -65,19 +56,39 @@ class QuestionController {
   async show(req: Request, res: Response) {
     try {
       const id = req.params.id;
-      const questionExists = await knex('questions')
-        .select('*')
+      const user = Number(req.query.user);
+
+      const data = await knex('questions')
+        .join('users','users.idUser','=','questions.idUser')
+        .join('contents','contents.idContent','=','questions.idContent')
+        .select('idQuestion','titleQuestion','textQuestion','nameUser','whenQuestion')
         .where('idQuestion', '=', id);
-      if (questionExists.length === 0) {
+      
+      if (data.length === 0) {
         throw new Error('Questão não existe');
       }
 
-      const data = await knex('questions')
-        .select()
-        .where('idQuestion', '=', id);
-      res
-        .status(200)
-        .send({ message: 'Questão encontrada', question: data[0] });
+      const likes = await knex('likes').where('idQuestion','=',data[0].idQuestion).count();
+
+      let idLike;
+      if (user > 0){
+        const like = await knex('likes').select('idLike').where('idQuestion','=',data[0].idQuestion).andWhere('likes.idUser',user)
+        idLike = (like.length > 0) ? like[0].idLike : -1;
+      }else{
+        idLike = -1;
+      }
+
+      const question = {
+          title:data[0].titleQuestion,
+          text:data[0].textQuestion,
+          when:data[0].whenQuestion,
+          user:data[0].nameUser,
+          id:data[0].idQuestion,
+          likes:likes[0]['count(*)'],
+          idLike
+        }
+
+      res.status(200).send({ message: 'Questão encontrada', question});
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }
@@ -95,7 +106,10 @@ class QuestionController {
       const content = Number(req.query.content);
       const user = Number(req.query.user);
 
-      const total = await knex('questions').count();
+      const total = await knex('questions').count()
+        .join('contents','contents.idContent','=','questions.idContent')
+        .where('indexContent', '=', content)
+        .or.where('questions.idUser', '=', user);
       const pages = Math.ceil(Number(total[0]['count(*)']) / perPage);
 
       let order;
@@ -115,7 +129,8 @@ class QuestionController {
       const data = await knex('questions')
         .join('users','users.idUser','=','questions.idUser')
         .join('contents','contents.idContent','=','questions.idContent')
-        .select('titleQuestion','textQuestion','nameUser','whenQuestion')
+        .leftJoin('likes','likes.idQuestion','=','questions.idQuestion')
+        .select('questions.idQuestion','titleQuestion','textQuestion','nameUser','whenQuestion')
         .limit(perPage)
         .offset(offset)
         .where('indexContent', '=', content)
@@ -126,21 +141,35 @@ class QuestionController {
         throw new Error('Questões não encontradas');
       }
 
-      const questions = data.map(q=>{
-        return{
+      const questions = [];
+      for (const q of data){
+        const likes = await knex('likes').where('idQuestion','=',q.idQuestion).count();
+
+        let idLike;
+        if (user > 0){
+          const like = await knex('likes').select('idLike').where('idQuestion','=',q.idQuestion).andWhere('likes.idUser',user)
+          idLike = (like.length > 0) ? like[0].idLike : -1;
+        }else{
+          idLike = -1;
+        }
+
+        questions.push({
           title:q.titleQuestion,
           text:q.textQuestion,
           when:q.whenQuestion,
           user:q.nameUser,
-          likes:49
-        }
-      })
+          id:q.idQuestion,
+          likes:likes[0]['count(*)'],
+          idLike
+        })
+      }
 
       res
         .status(200)
         .send({ message: 'Questões encontradas', questions, pages});
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
+      console.log(err)
     }
   }
   async edit(req: Request, res: Response) {

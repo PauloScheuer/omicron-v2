@@ -21,17 +21,17 @@ const Forum = () => {
 
   useEffect(()=>{
     handleSearchQuestions(page);
+  /* eslint-disable-next-line */
   },[page])
 
   const handleSearchQuestions = async(searchPage:number)=>{
     try{
-      const res = await api.get(`/question/index/?page=${searchPage}&content=${index}&order=${paramOrder}&by=${kindOrder}`);
-
+      let idUser = 1;
+      const res = await api.get(`/question/index/?page=${searchPage}&content=${index}&order=${paramOrder}&by=${kindOrder}&user=${idUser}`);
       setQuestions(res.data.questions);
       setMaxPage(res.data.pages);
-      console.log(searchPage)
       if (searchPage !== page){
-        // setPage(searchPage)
+        setPage(searchPage)
       }
     }catch(err){
       alert('Não foi possível realizar a busca!');
@@ -58,11 +58,11 @@ const Forum = () => {
           setParamOrder={(i:ParamOrderType)=>setParamOrder(i)} 
           setKindOrder={(i:KindOrderType)=>setKindOrder(i)}
           pagination={<Pagination min={minPage} max={maxPage} setPage={setPage} page={page}/>}
-          action={handleSearchQuestions(1)}
+          action={handleSearchQuestions}
         />
         <div className="flex flex-col mt-12">
           {questions.map(q=>{
-            return <Question title={q.title} text={q.text} when={q.when} user={q.user} likes={q.likes}/>
+            return <Question title={q.title} text={q.text} when={q.when} user={q.user} id={q.id} likes={q.likes} idLikeSt={q.idLike}/>
           })}
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-end">
