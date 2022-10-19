@@ -13,7 +13,8 @@ module.exports = {
         good: '#28A745',
         bad: '#DC3545',
         light: '#e5e5e5',
-        dark: '#272727'
+        dark: '#272727',
+        grey: '#808080'
       },
       boxShadow:{
         'primary':'4px 4px 5px 2px #2B6AFF',

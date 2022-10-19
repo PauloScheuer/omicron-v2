@@ -49,7 +49,7 @@ const Question = ({title,text,when,user,likes,id,idLikeSt,alone=false,token}:Que
       setIdLike(-1);
       setAdaptLikes(res.data.newCount);
     } catch (err) {
-      alert('Erro ao curtir publicação!')
+      alert('Erro ao descurtir publicação!')
     }
   }
 
@@ -62,11 +62,16 @@ const Question = ({title,text,when,user,likes,id,idLikeSt,alone=false,token}:Que
       <p className="">{text}</p>
       <div className="flex justify-between mt-8">
         <div className="flex">
-          {idLike === -1 ? (
+          {token !== '' ?
+          (
+            idLike === -1 ? (
             <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/>
-          ) : (
+            ) : (
             <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/>
-          )}
+            )
+          ) :
+            <FiHeart className="text-grey" size={24}/>
+          }
           <span className="font-medium ml-2">{adaptLikes}</span>
         </div>
         {!alone && (

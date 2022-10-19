@@ -59,10 +59,12 @@ const Answer = ({text,when,user,likes,id,idLikeSt,token}:AnswerI)=>{
       <p className="text-sm">{text}</p>
       <div className="flex justify-between mt-4">
         <div className="flex">
-          {idLike === -1 ?
-          <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/> :
-          <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/>
-          }
+          {token !== '' ? (
+            idLike === -1 ?
+            <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/> :
+            <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/>
+          ) :
+            <FiHeart className="text-grey" size={24}/>}
           <span className="font-medium ml-2">{adaptLikes}</span>
         </div>
       </div>
