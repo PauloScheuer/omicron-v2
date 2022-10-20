@@ -8,7 +8,7 @@ import { emailRegex } from '../../utils/emailRegex';
 import { scholarityOptions } from '../../utils/consts';
 import { Action, UserType } from '../../utils/types';
 import { edit, login } from '../../store/actions/user';
-import getToken from '../../utils/getToken';
+import {getToken} from '../../utils/getAttributes';
 import { useHistory } from 'react-router-dom';
 
 interface ProfileI{

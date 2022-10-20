@@ -3,13 +3,19 @@ import { FiArrowLeft } from 'react-icons/fi'
 import { useHistory, useParams } from 'react-router-dom'
 import Layout from '../../../components/Layout'
 import api from '../../../services/api'
+import {connect} from 'react-redux'
 import { AnswerType, KindOrderType, ParamOrderType, QuestionType } from '../../../utils/types'
 import Filters from '../Filters'
 import Pagination from '../Pagination'
 import Question from '../Question'
 import Answer from './Answer'
+import { getUserId } from '../../../utils/getAttributes'
 
-export default function Answers() {
+interface AnswersI{
+  userId:number;
+}
+
+const Answers = ({userId}:AnswersI) => {
   const [paramOrder, setParamOrder] = useState<ParamOrderType>(ParamOrderType.date);
   const [kindOrder, setKindOrder] = useState<KindOrderType>(KindOrderType.desc);
   const [question, setQuestion] = useState<QuestionType>();
@@ -47,8 +53,7 @@ export default function Answers() {
 
   const handleSearchAnswers = async(searchPage:number)=>{
     try{
-      const idUser = 1;
-      const res = await api.get(`answer/index/${id}?page=${searchPage}&order=${paramOrder}&by=${kindOrder}&user=${idUser}`);
+      const res = await api.get(`answer/index/${id}?page=${searchPage}&order=${paramOrder}&by=${kindOrder}&user=${userId}`);
       setAnswers(res.data.answers);
       setMaxPage(res.data.pages);
       if (searchPage !== page){
@@ -97,3 +102,9 @@ export default function Answers() {
     </Layout>
   )
 }
+
+const mapStateToProps = (state:any)=>{
+  return{userId:getUserId(state.user)}
+}
+
+export default connect(mapStateToProps,null)(Answers);

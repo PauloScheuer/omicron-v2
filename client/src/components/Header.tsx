@@ -2,7 +2,7 @@ import React, { Dispatch, useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
-import getToken from '../utils/getToken';
+import {getToken} from '../utils/getAttributes';
 import { Action, ActionWithoutParam } from '../utils/types';
 import {logout} from '../store/actions/user';
 import { useHistory } from 'react-router-dom';

@@ -4,12 +4,18 @@ import api from '../../services/api';
 import Layout from '../../components/Layout';
 import { FiArrowLeft } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
 import Filters from './Filters';
 import { KindOrderType, ParamOrderType, QuestionType } from '../../utils/types';
 import Question from './Question';
 import Pagination from './Pagination';
+import { getUserId } from '../../utils/getAttributes';
 
-const Forum = () => {
+interface ForumI{
+  userId:number;
+}
+
+const Forum = ({userId}:ForumI) => {
   const [paramOrder, setParamOrder] = useState<ParamOrderType>(ParamOrderType.date);
   const [kindOrder, setKindOrder] = useState<KindOrderType>(KindOrderType.desc);
   const [questions, setQuestions] = useState<QuestionType[]>([]);
@@ -26,8 +32,7 @@ const Forum = () => {
 
   const handleSearchQuestions = async(searchPage:number)=>{
     try{
-      let idUser = 1;
-      const res = await api.get(`/question/index/?page=${searchPage}&content=${index}&order=${paramOrder}&by=${kindOrder}&user=${idUser}`);
+      const res = await api.get(`/question/index/?page=${searchPage}&content=${index}&order=${paramOrder}&by=${kindOrder}&user=${userId}`);
       setQuestions(res.data.questions);
       setMaxPage(res.data.pages);
       if (searchPage !== page){
@@ -72,4 +77,9 @@ const Forum = () => {
     </Layout>
   )
 }
-export default Forum;
+
+const mapStateToProps = (state:any)=>{
+  return{userId:getUserId(state.user)}
+}
+
+export default connect(mapStateToProps,null)(Forum);

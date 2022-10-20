@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
-import getToken from '../utils/getToken';
+import {getToken} from '../utils/getAttributes';
 
 const Footer = (props:any) => {
   const logged = props.token !== '';

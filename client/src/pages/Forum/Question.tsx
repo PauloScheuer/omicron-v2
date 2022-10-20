@@ -3,7 +3,7 @@ import { FiArrowRight, FiHeart } from 'react-icons/fi';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
-import getToken from '../../utils/getToken';
+import {getToken} from '../../utils/getAttributes';
 
 interface QuestionI{
   title : string;

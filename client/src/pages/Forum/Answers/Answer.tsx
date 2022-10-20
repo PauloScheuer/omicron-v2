@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {  FiHeart } from 'react-icons/fi';
 import { connect } from 'react-redux';
 import api from '../../../services/api';
-import getToken from '../../../utils/getToken';
+import {getToken} from '../../../utils/getAttributes';
 
 interface AnswerI{
   text : string;

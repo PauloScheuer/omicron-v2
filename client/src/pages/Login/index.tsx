@@ -100,6 +100,7 @@ const mapDispatchToProps = (dispatch:Dispatch<Action>) =>{
   return{
     onLogin: (user:UserType) => {
       localStorage.setItem('token',user.token);
+      localStorage.setItem('userId',String(user.id));
       dispatch(login(user))
     }
   }
