@@ -75,6 +75,7 @@ const mapDispatchToProps = (dispatch:Dispatch<Action | ActionWithoutParam>) =>{
   return{
     onLogout: () => {
       localStorage.removeItem('token');
+      localStorage.removeItem('userId');
       dispatch(logout());
     }
   }
