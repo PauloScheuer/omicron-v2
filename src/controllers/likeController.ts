@@ -74,7 +74,9 @@ class LikeController {
       await knex('likes').delete().where('idLike', '=', id);
 
       const capsType = like[0].idAnswer == null ? 'Question' : 'Answer';
-      const count = await knex('likes').where(`likes.id${capsType}`,'=',id).count();
+      const idParent = like[0]['id'+capsType];
+
+      const count = await knex('likes').where(`likes.id${capsType}`,'=',idParent).count();
 
       res.status(200).send({ message: 'Like deletado', newCount:count[0]['count(*)'] });
     } catch (err) {
