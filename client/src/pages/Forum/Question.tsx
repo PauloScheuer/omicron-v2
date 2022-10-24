@@ -12,27 +12,27 @@ interface QuestionI{
   user : string;
   likes : number;
   id : number;
-  idLikeSt : number;
+  hasLikedSt : boolean;
   alone?: boolean;
   token?: string
 }
 
-const Question = ({title,text,when,user,likes,id,idLikeSt,alone=false,token}:QuestionI)=>{
-  const [idLike, setIdLike] = useState<number>(idLikeSt);
+const Question = ({title,text,when,user,likes,id,hasLikedSt,alone=false,token}:QuestionI)=>{
+  const [hasLiked, setHasLiked] = useState<boolean>(hasLikedSt);
   const [adaptLikes,setAdaptLikes] = useState<number>(likes);
 
   const handleLike = async ()=>{
     try {
       const res = await api.post('like/create',{
         type:'question',
-        id,
+        id
       },{
         headers:{
           authorization:'BEARER '+token
         }
       })
 
-      setIdLike(res.data.id);
+      setHasLiked(true);
       setAdaptLikes(res.data.newCount);
     } catch (err) {
       alert('Erro ao curtir publicação!')
@@ -41,12 +41,12 @@ const Question = ({title,text,when,user,likes,id,idLikeSt,alone=false,token}:Que
 
   const handleDislike = async ()=>{
     try {
-      const res = await api.delete('like/delete/'+idLike,{
+      const res = await api.delete(`like/delete/${id}?type=question`,{
         headers:{
           authorization:'BEARER '+token
         }
       })
-      setIdLike(-1);
+      setHasLiked(false);
       setAdaptLikes(res.data.newCount);
     } catch (err) {
       alert('Erro ao descurtir publicação!')
@@ -64,10 +64,10 @@ const Question = ({title,text,when,user,likes,id,idLikeSt,alone=false,token}:Que
         <div className="flex">
           {token !== '' ?
           (
-            idLike === -1 ? (
-            <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/>
-            ) : (
-            <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/>
+            hasLiked ? (
+              <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/>
+              ) : (
+              <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/>
             )
           ) :
             <FiHeart className="text-grey" size={24}/>

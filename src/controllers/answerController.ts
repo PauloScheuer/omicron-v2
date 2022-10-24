@@ -100,40 +100,42 @@ class AnswerController {
         by = 'desc'
       }
 
-      const data = await knex('answers')
+      const data = await knex.with('new_table',aux=>{
+        aux.from('answers')
         .join('users','users.idUser','=','answers.idUser')
-        .select('idAnswer','textAnswer','whenAnswer','nameUser')
-        .limit(perPage)
-        .offset(offset)
-        .where('idQuestion', '=', question)
-        .or.where('answers.idUser', '=', user)
-        .orderBy(order, by);
+        .leftJoin('likes','likes.idAnswer','=','answers.idAnswer')
+        .select(
+          'answers.idAnswer',
+          'textAnswer',
+          'nameUser',
+          'whenAnswer',
+          'likes.idLike',
+          {'userLiked':knex.raw('likes.idUser = ?',[user])},
+        )
+        .where('answers.idQuestion', '=', question)
+        .rank('rank', knex.raw('partition by ?? order by ?? desc', ['answers.idAnswer',knex.raw('likes.idUser = ?',[user])]))
+      })
+      .select(
+        '*',
+        {'likes':knex.raw('COUNT(idLike)')}
+      )
+      .groupByRaw('idAnswer')
+      .having('rank','=',1)
+      .limit(perPage)
+      .offset(offset)
+      .orderBy(order, by)
+      .from('new_table')
 
-      if (data.length === 0) {
-        throw new Error('Sem respostas');
-      }
-
-      const answers = [];
-      for (const a of data){
-        const likes = await knex('likes').where('likes.idAnswer','=',a.idAnswer).count();
-
-        let idLike;
-        if (user > 0){
-          const like = await knex('likes').select('idLike').where('idAnswer','=',a.idAnswer).andWhere('likes.idUser',user)
-          idLike = (like.length > 0) ? like[0].idLike : -1;
-        }else{
-          idLike = -1;
-        }
-
-        answers.push({
+      const answers = data.map(a=>{
+        return{
           id:a.idAnswer,
           text:a.textAnswer,
           when:a.whenAnswer,
           user:a.nameUser,
-          likes: likes[0]['count(*)'],
-          idLike
-        })
-      };
+          likes: a.likes || 0,
+          hasLiked: a.userLiked > 0
+        }
+      })
 
       res.status(200).send({ message: 'Respostas encontradas', answers, pages});
     } catch (err) {

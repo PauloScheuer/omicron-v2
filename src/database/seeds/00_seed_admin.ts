@@ -23,5 +23,12 @@ export async function seed(knex: Knex) {
       levelUser: 4,
       isAdminUser: true
     },
+    {
+      nameUser: 'Paulo Roberto Scheuer Gomes - 2',
+      emailUser: 'pauloroberto.scheuergomes.404@gmail.com2',
+      keyUser: `${toCrypt('2')}`,
+      levelUser: 4,
+      isAdminUser: true
+    },
   ]);
 }

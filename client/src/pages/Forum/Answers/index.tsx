@@ -31,8 +31,7 @@ const Answers = ({userId}:AnswersI) => {
   useEffect(()=>{
     const handleSearchQuestion = async ()=>{
       try{
-        const idUser = 1;
-        const res = await api.get(`question/show/${id}?user=${idUser}`);
+        const res = await api.get(`question/show/${id}?user=${userId}`);
         setQuestion(res.data.question);
 
       }catch(err){
@@ -79,7 +78,7 @@ const Answers = ({userId}:AnswersI) => {
           </div>
         </div>
         {question && (
-          <Question title={question.title} text={question.text} when={question.when} user={question.user} likes={question.likes} id={question.id} idLikeSt={question.idLike} alone={true}/>
+          <Question title={question.title} text={question.text} when={question.when} user={question.user} likes={question.likes} id={question.id} hasLikedSt={question.hasLiked} alone={true}/>
         )}
         <h1 className="text-secundary text-3xl font-bold">Respostas:</h1>
         <Filters 
@@ -92,7 +91,7 @@ const Answers = ({userId}:AnswersI) => {
         />
         <div className="flex flex-col mt-12 ml-10 md:ml-24 lg:ml-48">
           {answers.map(a=>{
-            return <Answer text={a.text} when={a.when} user={a.user} likes={a.likes} id={a.id} idLikeSt={a.idLike}/>
+            return <Answer text={a.text} when={a.when} user={a.user} likes={a.likes} id={a.id} hasLikedSt={a.hasLiked} key={a.id}/>
           })}
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-end">

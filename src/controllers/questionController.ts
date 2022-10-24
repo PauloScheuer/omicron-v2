@@ -58,24 +58,33 @@ class QuestionController {
       const id = req.params.id;
       const user = Number(req.query.user);
 
-      const data = await knex('questions')
+      const data = await knex.with('new_table',aux=>{
+        aux.from('questions')
         .join('users','users.idUser','=','questions.idUser')
         .join('contents','contents.idContent','=','questions.idContent')
-        .select('idQuestion','titleQuestion','textQuestion','nameUser','whenQuestion')
-        .where('idQuestion', '=', id);
+        .leftJoin('likes','likes.idQuestion','=','questions.idQuestion')
+        .select(
+          'questions.idQuestion',
+          'titleQuestion',
+          'textQuestion',
+          'nameUser',
+          'whenQuestion',
+          'idLike',
+          {'userLiked':knex.raw('likes.idUser = ?',[user])}
+        )
+        .rank('rank', knex.raw('order by ?? desc', [knex.raw('likes.idUser = ?',[user])]))
+        .where('questions.idQuestion', '=', id)
+      })
+      .select(
+        '*',
+        {'likes':knex.raw('COUNT(idLike)')}
+      )
+      .having('rank','=',1)
+      .groupBy('idQuestion')
+      .from('new_table');
       
       if (data.length === 0) {
         throw new Error('Questão não existe');
-      }
-
-      const likes = await knex('likes').where('idQuestion','=',data[0].idQuestion).count();
-
-      let idLike;
-      if (user > 0){
-        const like = await knex('likes').select('idLike').where('idQuestion','=',data[0].idQuestion).andWhere('likes.idUser',user)
-        idLike = (like.length > 0) ? like[0].idLike : -1;
-      }else{
-        idLike = -1;
       }
 
       const question = {
@@ -84,8 +93,8 @@ class QuestionController {
           when:data[0].whenQuestion,
           user:data[0].nameUser,
           id:data[0].idQuestion,
-          likes:likes[0]['count(*)'],
-          idLike
+          likes:data[0].likes || 0,
+          hasLiked:data[0].userLiked > 0
         }
 
       res.status(200).send({ message: 'Questão encontrada', question});
@@ -126,50 +135,56 @@ class QuestionController {
         by = 'desc'
       }
 
-      const data = await knex('questions')
+      const data = await knex.with('new_table',aux=>{
+        aux.from('questions')
         .join('users','users.idUser','=','questions.idUser')
         .join('contents','contents.idContent','=','questions.idContent')
         .leftJoin('likes','likes.idQuestion','=','questions.idQuestion')
-        .select('questions.idQuestion','titleQuestion','textQuestion','nameUser','whenQuestion')
-        .limit(perPage)
-        .offset(offset)
+        .select(
+          'questions.idQuestion',
+          'titleQuestion',
+          'textQuestion',
+          'nameUser',
+          'whenQuestion',
+          'likes.idLike',
+          {'userLiked':knex.raw('likes.idUser = ?',[user])},
+        )
         .where('indexContent', '=', content)
-        .or.where('users.idUser', '=', user)
-        .orderBy(order, by);
+        .rank('rank', knex.raw('partition by ?? order by ?? desc', ['questions.idQuestion',knex.raw('likes.idUser = ?',[user])]))
+      })
+      .select(
+        '*',
+        {'likes':knex.raw('COUNT(idLike)')}
+      )
+      .groupByRaw('idQuestion')
+      .having('rank','=',1)
+      .limit(perPage)
+      .offset(offset)
+      .orderBy(order, by)
+      .from('new_table')
+
 
       if (data.length === 0) {
         throw new Error('Questões não encontradas');
       }
 
-      const questions = [];
-      for (const q of data){
-        const likes = await knex('likes').where('idQuestion','=',q.idQuestion).count();
-
-        let idLike;
-        if (user > 0){
-          const like = await knex('likes').select('idLike').where('idQuestion','=',q.idQuestion).andWhere('likes.idUser',user)
-          idLike = (like.length > 0) ? like[0].idLike : -1;
-        }else{
-          idLike = -1;
-        }
-
-        questions.push({
+      const questions = data.map(q=>{
+        return{
           title:q.titleQuestion,
           text:q.textQuestion,
           when:q.whenQuestion,
           user:q.nameUser,
           id:q.idQuestion,
-          likes:likes[0]['count(*)'],
-          idLike
-        })
-      }
+          likes:q.likes || 0,
+          hasLiked:q.userLiked > 0,
+        }
+      })
 
       res
         .status(200)
         .send({ message: 'Questões encontradas', questions, pages});
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
-      console.log(err)
     }
   }
   async edit(req: Request, res: Response) {

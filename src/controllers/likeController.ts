@@ -58,25 +58,26 @@ class LikeController {
       res.status(200).send({ message: 'Like cadastrado', id: idLike[0], newCount:count[0]['count(*)'] });
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
-      console.log(err)
     }
   }
   async delete(req: Request, res: Response) {
     try {
       const id = req.params.id;
+      const type = capitalize(String(req.query.type));
+      const {idToken} = req.body;
+
       const like = await knex('likes')
         .select('*')
-        .where('idLike', '=', id);
+        .where(`likes.id${type}`, '=', id).andWhere('idUser',idToken);
       if (like.length === 0) {
         throw new Error('Like não existe');
       }
 
-      await knex('likes').delete().where('idLike', '=', id);
+      await knex('likes').delete().where(`likes.id${type}`, '=', id).andWhere('idUser',idToken);
 
-      const capsType = like[0].idAnswer == null ? 'Question' : 'Answer';
-      const idParent = like[0]['id'+capsType];
+      const idParent = like[0]['id'+type];
 
-      const count = await knex('likes').where(`likes.id${capsType}`,'=',idParent).count();
+      const count = await knex('likes').where(`likes.id${type}`,'=',idParent).count();
 
       res.status(200).send({ message: 'Like deletado', newCount:count[0]['count(*)'] });
     } catch (err) {

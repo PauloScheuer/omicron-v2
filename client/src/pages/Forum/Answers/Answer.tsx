@@ -10,12 +10,12 @@ interface AnswerI{
   user : string;
   likes : number;
   id : number;
-  idLikeSt : number;
+  hasLikedSt : boolean;
   token ?: string;
 }
 
-const Answer = ({text,when,user,likes,id,idLikeSt,token}:AnswerI)=>{
-  const [idLike, setIdLike] = useState<number>(idLikeSt);
+const Answer = ({text,when,user,likes,id,hasLikedSt,token}:AnswerI)=>{
+  const [hasLiked, setHasLiked] = useState<boolean>(hasLikedSt);
   const [adaptLikes, setAdaptLikes] = useState<number>(likes);
 
   const handleLike = async()=>{
@@ -29,7 +29,7 @@ const Answer = ({text,when,user,likes,id,idLikeSt,token}:AnswerI)=>{
         }
       })
 
-      setIdLike(res.data.id);
+      setHasLiked(true);
       setAdaptLikes(res.data.newCount);
     } catch (err) {
       alert('Erro ao curtir publicação!')
@@ -38,13 +38,13 @@ const Answer = ({text,when,user,likes,id,idLikeSt,token}:AnswerI)=>{
 
   const handleDislike = async()=>{
     try {
-      const res = await api.delete('like/delete/'+idLike,{
+      const res = await api.delete(`like/delete/${id}?type=answer`,{
         headers:{
           authorization:'BEARER '+token
         }
       })
 
-      setIdLike(-1);
+      setHasLiked(false);
       setAdaptLikes(res.data.newCount);
     } catch (err) {
       alert('Erro ao descurtir publicação!')
@@ -60,9 +60,9 @@ const Answer = ({text,when,user,likes,id,idLikeSt,token}:AnswerI)=>{
       <div className="flex justify-between mt-4">
         <div className="flex">
           {token !== '' ? (
-            idLike === -1 ?
-            <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/> :
-            <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/>
+            hasLiked ?
+            <FiHeart className="text-primary cursor-pointer" size={24} onClick={()=>handleDislike()}/> :
+            <FiHeart className="text-dark cursor-pointer" size={24} onClick={()=>handleLike()}/>
           ) :
             <FiHeart className="text-grey" size={24}/>}
           <span className="font-medium ml-2">{adaptLikes}</span>
