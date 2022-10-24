@@ -91,7 +91,7 @@ class AnswerController {
       if(Number(req.query.order) == ParamOrderType.date){
         order = 'whenAnswer'
       }else{
-        order = 'whenAnswer' //todo
+        order = 'likes'
       }
 
       if(Number(req.query.by) == KindOrderType.asc){

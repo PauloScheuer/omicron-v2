@@ -126,7 +126,7 @@ class QuestionController {
       if(Number(req.query.order) == ParamOrderType.date){
         order = 'whenQuestion'
       }else{
-        order = 'whenQuestion' //todo
+        order = 'likes'
       }
 
       if(Number(req.query.by) == KindOrderType.asc){
