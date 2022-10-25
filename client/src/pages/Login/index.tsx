@@ -25,7 +25,7 @@ const Login = (props:any) => {
 
   const history = useHistory();
 
-  const handleDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
+  const handleDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLTextAreaElement>)=>{
     const { name, value } = event.target;
     setData({ ...data, [name]: value });
   }

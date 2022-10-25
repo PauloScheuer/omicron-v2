@@ -13,10 +13,10 @@ class QuestionController {
       if (userExists.length === 0) {
         throw new Error('Usuário não existe');
       }
-      const contentExists = await knex('contents')
+      const contentData = await knex('contents')
         .select('*')
-        .where('idContent', '=', content);
-      if (contentExists.length === 0) {
+        .where('indexContent', '=', content);
+      if (contentData.length === 0) {
         throw new Error('Conteúdo não existe');
       }
 
@@ -27,7 +27,7 @@ class QuestionController {
         textQuestion: text,
         whenQuestion: when,
         idUser: user,
-        idContent: content,
+        idContent: contentData[0].idContent,
       };
       const idQuestion = await knex('questions')
         .insert(newQuestion)

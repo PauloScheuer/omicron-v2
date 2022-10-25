@@ -16,7 +16,7 @@ const Calculator = ({fields, neededFields}:CalculatorI) => {
   const [formData, setFormData] = useState<FieldType[]>(fields);
   const [result, setResult] = useState<string[]>([]);
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) {
+  function handleInputChange(event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLTextAreaElement>) {
     const { name, value } = event.target;
     const index = formData.findIndex(item=>item.nameField === name);
     const newFormData = [...formData];

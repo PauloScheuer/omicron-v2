@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../services/api';
 import Layout from '../../components/Layout';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import Filters from './Filters';
@@ -10,6 +10,7 @@ import { KindOrderType, ParamOrderType, QuestionType } from '../../utils/types';
 import Question from './Question';
 import Pagination from './Pagination';
 import { getUserId } from '../../utils/getAttributes';
+import Modal from '../../components/Modal';
 
 interface ForumI{
   userId:number;
@@ -21,6 +22,7 @@ const Forum = ({userId}:ForumI) => {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [page, setPage] = useState<number>(1);
   const [maxPage,setMaxPage] = useState<number>(1);
+  const [showModal, setShowModal] = useState<boolean>(false)
   const minPage = 1;
 
   const { index } = useParams();
@@ -28,7 +30,21 @@ const Forum = ({userId}:ForumI) => {
   useEffect(()=>{
     handleSearchQuestions(page);
   /* eslint-disable-next-line */
-  },[page])
+  },[page]);
+
+  useEffect(()=>{
+    if(!showModal){
+      handleSearchQuestions(page)
+    }
+  },[showModal])
+
+  useEffect(()=>{
+    if(showModal){
+      document.body.style.overflow = 'hidden'
+    }else{
+      document.body.style.overflow = 'auto'
+    }
+  },[showModal]);
 
   const handleSearchQuestions = async(searchPage:number)=>{
     try{
@@ -43,8 +59,9 @@ const Forum = ({userId}:ForumI) => {
     }
   }
 
-  return( 
+  return(
     <Layout>
+      <Modal show={showModal} setShow={(b:boolean)=>setShowModal(b)} content={index}/>
       <div className="md:px-32 px-10 py-20">
         <Link to="/forum">
           <div className="flex items-center">
@@ -57,6 +74,13 @@ const Forum = ({userId}:ForumI) => {
           </div>
         </Link>
         <h1 className="text-secundary text-4xl font-bold mt-6">Fórum sobre conteúdo</h1>
+        <div
+          className="flex justify-center items-center bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white transition duration-300 rounded w-min p-3 mt-4 cursor-pointer"
+          onClick={()=>setShowModal(!showModal)}
+        >
+          <FiPlus size={20}/>
+          <span className="whitespace-nowrap font-bold ml-2">Nova pergunta</span>
+        </div>
         <Filters 
           paramOrder={paramOrder} 
           kindOrder={kindOrder} 

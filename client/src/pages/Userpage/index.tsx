@@ -41,12 +41,12 @@ const Userpage = (props:any) => {
 
   const history = useHistory();
 
-  const handleProfileDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
+  const handleProfileDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLTextAreaElement>)=>{
     const { name, value } = event.target;
     setProfileData({ ...profileData, [name]: value });
   }
 
-  const handleAuthDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
+  const handleAuthDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLTextAreaElement>)=>{
     const { name, value } = event.target;
     setAuthData({ ...authData, [name]: value });
   }
