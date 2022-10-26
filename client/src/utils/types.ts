@@ -67,7 +67,8 @@ export type QuestionType={
     when:Date,
     id:number,
     likes:number,
-    hasLiked:boolean
+    hasLiked:boolean,
+    hasCreated:boolean
 }
 
 export type AnswerType={

@@ -93,7 +93,7 @@ const Forum = ({userId}:ForumI) => {
         />
         <div className="flex flex-col mt-12">
           {questions.map(q=>{
-            return <Question title={q.title} text={q.text} when={q.when} user={q.user} id={q.id} likes={q.likes} hasLikedSt={q.hasLiked} key={q.id}/>
+            return <Question title={q.title} text={q.text} when={q.when} user={q.user} id={q.id} likes={q.likes} hasLikedSt={q.hasLiked} hasCreated={q.hasCreated} postDelete={()=>handleSearchQuestions(page)} key={q.id}/>
           })}
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-end">

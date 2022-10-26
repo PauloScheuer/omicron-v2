@@ -93,13 +93,13 @@ const Answers = ({userId}:AnswersI) => {
           </div>
         </div>
         {question && (
-          <Question title={question.title} text={question.text} when={question.when} user={question.user} likes={question.likes} id={question.id} hasLikedSt={question.hasLiked} alone={true}/>
+          <Question title={question.title} text={question.text} when={question.when} user={question.user} likes={question.likes} id={question.id} hasLikedSt={question.hasLiked} hasCreated={question.hasCreated} postDelete={()=>history.goBack()} alone={true}/>
         )}
         <h1 className="text-secundary text-3xl font-bold">Respostas:</h1>
         <ButtonCreate action={()=>setShowModal(!showModal)} text={'Nova resposta'}/>
         <Filters 
-          paramOrder={paramOrder} 
-          kindOrder={kindOrder} 
+          paramOrder={paramOrder}
+          kindOrder={kindOrder}
           setParamOrder={(i:ParamOrderType)=>setParamOrder(i)} 
           setKindOrder={(i:KindOrderType)=>setKindOrder(i)} 
           pagination={<Pagination min={minPage} max={maxPage} page={page} setPage={setPage}/>}

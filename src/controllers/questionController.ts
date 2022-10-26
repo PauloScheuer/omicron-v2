@@ -68,6 +68,7 @@ class QuestionController {
           'titleQuestion',
           'textQuestion',
           'nameUser',
+          'questions.idUser',
           'whenQuestion',
           'idLike',
           {'userLiked':knex.raw('likes.idUser = ?',[user])}
@@ -94,7 +95,8 @@ class QuestionController {
           user:data[0].nameUser,
           id:data[0].idQuestion,
           likes:data[0].likes || 0,
-          hasLiked:data[0].userLiked > 0
+          hasLiked:data[0].userLiked > 0,
+          hasCreated:data[0].idUser === user
         }
 
       res.status(200).send({ message: 'Questão encontrada', question});
@@ -145,6 +147,7 @@ class QuestionController {
           'titleQuestion',
           'textQuestion',
           'nameUser',
+          'questions.idUser',
           'whenQuestion',
           'likes.idLike',
           {'userLiked':knex.raw('likes.idUser = ?',[user])},
@@ -177,6 +180,7 @@ class QuestionController {
           id:q.idQuestion,
           likes:q.likes || 0,
           hasLiked:q.userLiked > 0,
+          hasCreated:q.idUser === user
         }
       })
 

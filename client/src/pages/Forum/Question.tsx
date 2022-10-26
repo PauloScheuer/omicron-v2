@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FiArrowRight, FiHeart } from 'react-icons/fi';
+import { FiArrowRight, FiHeart, FiX } from 'react-icons/fi';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -13,11 +13,13 @@ interface QuestionI{
   likes : number;
   id : number;
   hasLikedSt : boolean;
+  hasCreated : boolean;
+  postDelete : ()=>void;
   alone?: boolean;
   token?: string
 }
 
-const Question = ({title,text,when,user,likes,id,hasLikedSt,alone=false,token}:QuestionI)=>{
+const Question = ({title,text,when,user,likes,id,hasLikedSt,hasCreated,postDelete,alone=false,token}:QuestionI)=>{
   const [hasLiked, setHasLiked] = useState<boolean>(hasLikedSt);
   const [adaptLikes,setAdaptLikes] = useState<number>(likes);
 
@@ -53,11 +55,37 @@ const Question = ({title,text,when,user,likes,id,hasLikedSt,alone=false,token}:Q
     }
   }
 
+  const handleDeleteQuestion = async()=>{
+    try {
+     await api.delete('question/delete/'+id,{
+      headers:{
+        authorization:'BEARER '+token
+      }
+     })
+
+      postDelete();
+      alert('Publicação excluída');
+    } catch (err) {
+      alert('Erro ao excluir publicação!')
+    }
+  }
+
   return (
-    <div className="bg-white rounded-lg flex-none md:px-16 px-8 py-10 mb-8">
-      <div className="mb-6">
-        <h3 className="text-primaryDark font-bold text-3xl">{title}</h3>
-        <span className="pl-4 text-sm font-medium text-primary">{new Date(when).toLocaleString()} por {user}</span>
+    <div className="relative bg-white rounded-lg flex-none md:px-16 px-8 py-10 mb-8">
+      <div className="flex justify-between">
+        <div className="mb-6">
+          <h3 className="text-primaryDark font-bold text-3xl">{title}</h3>
+          <span className="pl-4 text-sm font-medium text-primary">{new Date(when).toLocaleString()} por {user}</span>
+        </div>
+        <div>
+          {hasCreated && (
+            <FiX
+            className="text-dark hover:text-bad cursor-pointer"
+            size={24}
+            onClick={handleDeleteQuestion}
+            />
+          )}
+        </div>
       </div>
       <p className="">{text}</p>
       <div className="flex justify-between mt-8">
