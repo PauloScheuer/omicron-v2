@@ -27,6 +27,7 @@ const Input = ({placeholder, name, value, setValue, style, type, options}:InputI
     (
       <textarea 
         className={`${style} ${baseStyle}`}
+        value={value}
         onChange={setValue}
         name={name}
       />

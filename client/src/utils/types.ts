@@ -78,3 +78,10 @@ export type AnswerType={
     likes:number,
     hasLiked:boolean
 }
+
+export enum ModalType{
+    mteQuestion = 0,
+    mteAnswer = 1,
+    mtaCreate = 2,
+    mtaEdit = 3
+}

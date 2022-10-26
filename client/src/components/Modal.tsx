@@ -3,13 +3,16 @@ import { FiX } from 'react-icons/fi';
 import { connect } from 'react-redux';
 import api from '../services/api';
 import { getToken, getUserId } from '../utils/getAttributes';
+import { ModalType } from '../utils/types';
 import Button from './Button';
 import Input from './Input';
 
 interface ModalI{
   show: boolean;
   setShow: (b:boolean)=>void;
-  content: number;
+  type:{entity:ModalType,action:ModalType};
+  content?: number;
+  question?: number;
   token?: string;
   user?: number;
 }
@@ -19,7 +22,7 @@ type questionData={
   text:string
 }
 
-const Modal = ({show,setShow,content,token,user}:ModalI)=>{
+const Modal = ({show,setShow,content,question,type,token,user}:ModalI)=>{
   const [formData, setFormData] = useState<questionData>({title:'',text:''});
   const [sendEnabled, setSendEnabled] = useState<boolean>(false);
 
@@ -49,12 +52,34 @@ const Modal = ({show,setShow,content,token,user}:ModalI)=>{
     }
   }
 
+  const handleCreateAnswer = async()=>{
+    try {
+      await api.post('answer/create',
+      {
+        text:formData.text,
+        user,
+        question
+      },
+      {
+        headers:{
+          authorization:'BEARER '+token
+        }
+      })
+
+      alert('Resposta criada com sucesso!');
+      setShow(false)
+    } catch (err) {
+      alert('Erro ao criar resposta!')
+    }
+  }
+
   useEffect(()=>{
-    if((formData.title.length) < 1 || (formData.text.length < 1)){
+    if((formData.text.length < 1) || ((type.entity === ModalType.mteQuestion) && (formData.title.length < 1))){
       setSendEnabled(false);
     }else{
       setSendEnabled(true)
     }
+  //eslint-disable-next-line
   },[formData]);
 
   useEffect(()=>{
@@ -72,14 +97,16 @@ const Modal = ({show,setShow,content,token,user}:ModalI)=>{
           size={32}
         />
         <div className="flex flex-col pt-24 items-center">
-          <h1 className="text-primaryDark text-4xl font-bold">Nova pergunta</h1>
-          <Input 
+          <h1 className="text-primaryDark text-4xl font-bold">Nova {type.entity === ModalType.mteQuestion ? 'pergunta' : 'resposta'}</h1>
+          {type.entity === ModalType.mteQuestion && (
+            <Input
             name="title" 
             placeholder="Título da pergunta"
             value={formData.title}
             setValue={handleInputChange}
             style={`mt-8 w-56`}
             />
+          )}
           <Input
             name="text"
             placeholder=""
@@ -87,10 +114,10 @@ const Modal = ({show,setShow,content,token,user}:ModalI)=>{
             setValue={handleInputChange}
             style={`mt-8 w-56 h-60 sm:h-40`}
             type="textarea"
-            />
+          />
           <Button 
-            action={handleCreateQuestion}
-            value="Perguntar"
+            action={type.entity === ModalType.mteQuestion ? handleCreateQuestion : handleCreateAnswer}
+            value={type.entity === ModalType.mteQuestion ? 'Perguntar' : 'Responder'}
             enabled={sendEnabled}
             style={`mt-8`}
           />

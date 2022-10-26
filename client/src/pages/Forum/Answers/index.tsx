@@ -4,12 +4,14 @@ import { useHistory, useParams } from 'react-router-dom'
 import Layout from '../../../components/Layout'
 import api from '../../../services/api'
 import {connect} from 'react-redux'
-import { AnswerType, KindOrderType, ParamOrderType, QuestionType } from '../../../utils/types'
+import { AnswerType, KindOrderType, ModalType, ParamOrderType, QuestionType } from '../../../utils/types'
 import Filters from '../Filters'
 import Pagination from '../Pagination'
 import Question from '../Question'
 import Answer from './Answer'
 import { getUserId } from '../../../utils/getAttributes'
+import ButtonCreate from '../../../components/ButtonCreate'
+import Modal from '../../../components/Modal'
 
 interface AnswersI{
   userId:number;
@@ -17,11 +19,12 @@ interface AnswersI{
 
 const Answers = ({userId}:AnswersI) => {
   const [paramOrder, setParamOrder] = useState<ParamOrderType>(ParamOrderType.date);
-  const [kindOrder, setKindOrder] = useState<KindOrderType>(KindOrderType.desc);
+  const [kindOrder, setKindOrder] = useState<KindOrderType>(KindOrderType.asc);
   const [question, setQuestion] = useState<QuestionType>();
   const [page, setPage] = useState<number>(1);
   const [answers, setAnswers] = useState<AnswerType[]>([]);
   const [maxPage, setMaxPage] = useState<number>(1);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const minPage = 1;
 
@@ -44,6 +47,15 @@ const Answers = ({userId}:AnswersI) => {
     /* eslint-disable-next-line */
   },[])
 
+  useEffect(()=>{
+    if(showModal){
+      document.body.style.overflow = 'hidden'
+    }else{
+      document.body.style.overflow = 'auto';
+      handleSearchAnswers(page);
+    }
+  //eslint-disable-next-line
+  },[showModal]);
 
   useEffect(()=>{
     handleSearchAnswers(page);
@@ -66,6 +78,9 @@ const Answers = ({userId}:AnswersI) => {
 
   return (
     <Layout>
+      {question && (
+        <Modal show={showModal} setShow={(b:boolean)=>setShowModal(b)} question={question.id} type={{entity:ModalType.mteAnswer,action:ModalType.mtaCreate}}/>
+      )}
       <div className="md:px-32 px-10 py-20">
         <div className="mb-6 cursor-pointer">
           <div className="flex items-center" onClick={()=>history.goBack()}>
@@ -81,6 +96,7 @@ const Answers = ({userId}:AnswersI) => {
           <Question title={question.title} text={question.text} when={question.when} user={question.user} likes={question.likes} id={question.id} hasLikedSt={question.hasLiked} alone={true}/>
         )}
         <h1 className="text-secundary text-3xl font-bold">Respostas:</h1>
+        <ButtonCreate action={()=>setShowModal(!showModal)} text={'Nova resposta'}/>
         <Filters 
           paramOrder={paramOrder} 
           kindOrder={kindOrder} 
