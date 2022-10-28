@@ -107,7 +107,7 @@ const Answers = ({userId}:AnswersI) => {
         />
         <div className="flex flex-col mt-12 ml-10 md:ml-24 lg:ml-48">
           {answers.map(a=>{
-            return <Answer text={a.text} when={a.when} user={a.user} likes={a.likes} id={a.id} hasLikedSt={a.hasLiked} key={a.id}/>
+            return <Answer text={a.text} when={a.when} user={a.user} likes={a.likes} id={a.id} hasLikedSt={a.hasLiked} hasCreated={a.hasCreated} postDelete={()=>handleSearchAnswers(page)} key={a.id}/>
           })}
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-end">

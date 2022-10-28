@@ -77,7 +77,8 @@ export type AnswerType={
     when:Date,
     id:number,
     likes:number,
-    hasLiked:boolean
+    hasLiked:boolean,
+    hasCreated: boolean
 }
 
 export enum ModalType{

@@ -108,6 +108,7 @@ class AnswerController {
           'answers.idAnswer',
           'textAnswer',
           'nameUser',
+          'answers.idUser',
           'whenAnswer',
           'likes.idLike',
           {'userLiked':knex.raw('likes.idUser = ?',[user])},
@@ -133,7 +134,8 @@ class AnswerController {
           when:a.whenAnswer,
           user:a.nameUser,
           likes: a.likes || 0,
-          hasLiked: a.userLiked > 0
+          hasLiked: a.userLiked > 0,
+          hasCreated: a.idUser === user
         }
       })
 
