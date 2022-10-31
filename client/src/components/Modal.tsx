@@ -3,9 +3,10 @@ import { FiX } from 'react-icons/fi';
 import { connect } from 'react-redux';
 import api from '../services/api';
 import { getToken, getUserId } from '../utils/getAttributes';
-import { ModalType } from '../utils/types';
+import { EditingPubliType, ModalType } from '../utils/types';
 import Button from './Button';
 import Input from './Input';
+
 
 interface ModalI{
   show: boolean;
@@ -13,17 +14,19 @@ interface ModalI{
   type:{entity:ModalType,action:ModalType};
   content?: number;
   question?: number;
+  publiData?:EditingPubliType;
   token?: string;
   user?: number;
 }
 
-type questionData={
+type publiData={
   title:string,
   text:string
 }
 
-const Modal = ({show,setShow,content,question,type,token,user}:ModalI)=>{
-  const [formData, setFormData] = useState<questionData>({title:'',text:''});
+const Modal = ({show,setShow,content,question,publiData,type,token,user}:ModalI)=>{
+  const initialData = publiData ? {title:publiData.title,text:publiData.text} : {title:'',text:''};
+  const [formData, setFormData] = useState<publiData>(initialData);
   const [sendEnabled, setSendEnabled] = useState<boolean>(false);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLTextAreaElement>)=>{
@@ -52,6 +55,26 @@ const Modal = ({show,setShow,content,question,type,token,user}:ModalI)=>{
     }
   }
 
+  const handleEditQuestion = async()=>{
+    try {
+      await api.put('question/edit/'+publiData?.id,
+      {
+        newTitle:formData.title,
+        newText:formData.text
+      },
+      {
+        headers:{
+          authorization:'BEARER '+token
+        }
+      })
+
+      alert('Pergunta editada com sucesso!');
+      setShow(false)
+    } catch (err) {
+      alert('Erro ao editar questão!');
+    }
+  }
+
   const handleCreateAnswer = async()=>{
     try {
       await api.post('answer/create',
@@ -73,6 +96,25 @@ const Modal = ({show,setShow,content,question,type,token,user}:ModalI)=>{
     }
   }
 
+  const handleEditAnswer = async()=>{
+    try {
+      await api.patch('answer/edit/'+publiData?.id,
+      {
+        newText:formData.text,
+      },
+      {
+        headers:{
+          authorization:'BEARER '+token
+        }
+      })
+
+      alert('Resposta editada com sucesso!');
+      setShow(false)
+    } catch (err) {
+      alert('Erro ao editar resposta!')
+    }
+  }
+
   useEffect(()=>{
     if((formData.text.length < 1) || ((type.entity === ModalType.mteQuestion) && (formData.title.length < 1))){
       setSendEnabled(false);
@@ -83,7 +125,8 @@ const Modal = ({show,setShow,content,question,type,token,user}:ModalI)=>{
   },[formData]);
 
   useEffect(()=>{
-    setFormData({title:'',text:''})
+    setFormData(initialData)
+  //eslint-disable-next-line
   },[show]);
 
   return (
@@ -97,7 +140,7 @@ const Modal = ({show,setShow,content,question,type,token,user}:ModalI)=>{
           size={32}
         />
         <div className="flex flex-col pt-24 items-center">
-          <h1 className="text-primaryDark text-4xl font-bold">Nova {type.entity === ModalType.mteQuestion ? 'pergunta' : 'resposta'}</h1>
+          <h1 className="text-primaryDark text-4xl font-bold">{type.action === ModalType.mtaCreate ? 'Nova' : 'Editar'} {type.entity === ModalType.mteQuestion ? 'pergunta' : 'resposta'}</h1>
           {type.entity === ModalType.mteQuestion && (
             <Input
             name="title" 
@@ -116,8 +159,10 @@ const Modal = ({show,setShow,content,question,type,token,user}:ModalI)=>{
             type="textarea"
           />
           <Button 
-            action={type.entity === ModalType.mteQuestion ? handleCreateQuestion : handleCreateAnswer}
-            value={type.entity === ModalType.mteQuestion ? 'Perguntar' : 'Responder'}
+            action={type.action === ModalType.mtaCreate ?
+              (type.entity === ModalType.mteQuestion ? handleCreateQuestion : handleCreateAnswer) :
+              (type.entity === ModalType.mteQuestion ? handleEditQuestion : handleEditAnswer)}
+            value={type.action === ModalType.mtaCreate ? (type.entity === ModalType.mteQuestion ? 'Perguntar' : 'Responder') : 'Editar'}
             enabled={sendEnabled}
             style={`mt-8`}
           />

@@ -82,8 +82,7 @@ class AnswerController {
       const user = Number(req.query.user);
 
       const total = await knex('answers').count()
-        .where('idQuestion', '=', question)
-        .or.where('answers.idUser', '=', user);
+        .where('idQuestion', '=', question);
       const pages = Math.ceil(Number(total[0]['count(*)']) / perPage);
 
       let order;

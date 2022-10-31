@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FiArrowRight, FiHeart, FiX } from 'react-icons/fi';
+import { FiArrowRight, FiEdit, FiHeart, FiX } from 'react-icons/fi';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -15,11 +15,12 @@ interface QuestionI{
   hasLikedSt : boolean;
   hasCreated : boolean;
   postDelete : ()=>void;
+  callEdit : ()=>void;
   alone?: boolean;
   token?: string
 }
 
-const Question = ({title,text,when,user,likes,id,hasLikedSt,hasCreated,postDelete,alone=false,token}:QuestionI)=>{
+const Question = ({title,text,when,user,likes,id,hasLikedSt,hasCreated,postDelete,callEdit,alone=false,token}:QuestionI)=>{
   const [hasLiked, setHasLiked] = useState<boolean>(hasLikedSt);
   const [adaptLikes,setAdaptLikes] = useState<number>(likes);
 
@@ -77,15 +78,20 @@ const Question = ({title,text,when,user,likes,id,hasLikedSt,hasCreated,postDelet
           <h3 className="text-primaryDark font-bold text-3xl">{title}</h3>
           <span className="pl-4 text-sm font-medium text-primary">{new Date(when).toLocaleString()} por {user}</span>
         </div>
-        <div>
-          {hasCreated && (
-            <FiX
-            className="text-dark hover:text-bad cursor-pointer"
-            size={24}
-            onClick={handleDeleteQuestion}
+        {hasCreated && (
+          <div className="flex">
+            <FiEdit
+              className="text-dark hover:text-good cursor-pointer mr-4"
+              size={24}
+              onClick={callEdit}
             />
-          )}
-        </div>
+            <FiX
+              className="text-dark hover:text-bad cursor-pointer"
+              size={24}
+              onClick={handleDeleteQuestion}
+            />
+          </div>
+        )}
       </div>
       <p className="">{text}</p>
       <div className="flex justify-between mt-8">

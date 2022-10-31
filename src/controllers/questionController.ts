@@ -117,11 +117,11 @@ class QuestionController {
       const content = Number(req.query.content);
       const user = Number(req.query.user);
 
-      const total = await knex('questions').count()
+      const total = await knex('questions').select('idQuestion',{count:knex.raw('COUNT(idQuestion)')})
         .join('contents','contents.idContent','=','questions.idContent')
-        .where('indexContent', '=', content)
-        .or.where('questions.idUser', '=', user);
-      const pages = Math.ceil(Number(total[0]['count(*)']) / perPage);
+        .where('indexContent', '=', content);
+
+      const pages = Math.ceil(Number(total[0].count) / perPage);
 
       let order;
       let by;
@@ -165,11 +165,6 @@ class QuestionController {
       .offset(offset)
       .orderBy(order, by)
       .from('new_table')
-
-
-      if (data.length === 0) {
-        throw new Error('Questões não encontradas');
-      }
 
       const questions = data.map(q=>{
         return{

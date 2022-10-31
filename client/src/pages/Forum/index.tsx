@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import api from '../../services/api';
 import Layout from '../../components/Layout';
 import { FiArrowLeft } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import Filters from './Filters';
-import { ContentType, KindOrderType, ModalType, ParamOrderType, QuestionType } from '../../utils/types';
+import { ContentType, EditingPubliType, KindOrderType, ModalType, ParamOrderType, QuestionType } from '../../utils/types';
 import Question from './Question';
 import Pagination from './Pagination';
 import { getUserId } from '../../utils/getAttributes';
@@ -24,10 +24,15 @@ const Forum = ({userId}:ForumI) => {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [page, setPage] = useState<number>(1);
   const [maxPage,setMaxPage] = useState<number>(1);
-  const [showModal, setShowModal] = useState<boolean>(false)
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalEntity, setModalEntity] = useState<ModalType>(ModalType.mteQuestion);
+  const [modalAction, setModalAction] = useState<ModalType>(ModalType.mtaCreate);
+  const [editingQuestion, setEditingQuestion] = useState<EditingPubliType>(null);
   const minPage = 1;
 
   const { index } = useParams();
+
+  const history = useHistory();
 
   useEffect(()=>{
     handleGetContent();
@@ -64,13 +69,21 @@ const Forum = ({userId}:ForumI) => {
         setPage(searchPage)
       }
     }catch(err){
-      alert('Não foi possível realizar a busca!');
+      alert('Erro ao carregar a página!');
+      history.push('/forum');
     }
+  }
+
+  const handleOpenModal = (entity:ModalType,action:ModalType,editingData:EditingPubliType = null)=>{
+    setModalEntity(entity);
+    setModalAction(action);
+    setEditingQuestion(editingData)
+    setShowModal(true);
   }
 
   return(
     <Layout>
-      <Modal show={showModal} setShow={(b:boolean)=>setShowModal(b)} content={index} type={{entity:ModalType.mteQuestion,action:ModalType.mtaCreate}}/>
+      <Modal show={showModal} setShow={(b:boolean)=>setShowModal(b)} content={index} type={{entity:modalEntity,action:modalAction}} publiData={editingQuestion}/>
       <div className="md:px-32 px-10 py-20">
         <Link to="/forum">
           <div className="flex items-center">
@@ -82,7 +95,7 @@ const Forum = ({userId}:ForumI) => {
           </div>
         </Link>
         <h1 className="text-secundary text-4xl font-bold mt-6">Fórum sobre {content.nameContent || 'conteúdo'}</h1>
-        <ButtonCreate action={()=>setShowModal(!showModal)} text={'Nova pergunta'}/>
+        <ButtonCreate action={()=>handleOpenModal(ModalType.mteQuestion,ModalType.mtaCreate)} text={'Nova pergunta'}/>
         <Filters 
           paramOrder={paramOrder} 
           kindOrder={kindOrder} 
@@ -93,7 +106,19 @@ const Forum = ({userId}:ForumI) => {
         />
         <div className="flex flex-col mt-12">
           {questions.map(q=>{
-            return <Question title={q.title} text={q.text} when={q.when} user={q.user} id={q.id} likes={q.likes} hasLikedSt={q.hasLiked} hasCreated={q.hasCreated} postDelete={()=>handleSearchQuestions(page)} key={q.id}/>
+            return <Question
+              title={q.title}
+              text={q.text}
+              when={q.when}
+              user={q.user}
+              id={q.id}
+              likes={q.likes}
+              hasLikedSt={q.hasLiked}
+              hasCreated={q.hasCreated}
+              postDelete={()=>handleSearchQuestions(page)}
+              callEdit={()=>handleOpenModal(ModalType.mteQuestion,ModalType.mtaEdit,{id:q.id,title:q.title,text:q.text})}
+              key={q.id}
+            />
           })}
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-end">

@@ -87,3 +87,9 @@ export enum ModalType{
     mtaCreate = 2,
     mtaEdit = 3
 }
+
+export type EditingPubliType={
+    id:number,
+    title:string,
+    text:string;
+  } | null

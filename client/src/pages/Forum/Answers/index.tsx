@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import Layout from '../../../components/Layout'
 import api from '../../../services/api'
 import {connect} from 'react-redux'
-import { AnswerType, KindOrderType, ModalType, ParamOrderType, QuestionType } from '../../../utils/types'
+import { AnswerType, EditingPubliType, KindOrderType, ModalType, ParamOrderType, QuestionType } from '../../../utils/types'
 import Filters from '../Filters'
 import Pagination from '../Pagination'
 import Question from '../Question'
@@ -25,6 +25,9 @@ const Answers = ({userId}:AnswersI) => {
   const [answers, setAnswers] = useState<AnswerType[]>([]);
   const [maxPage, setMaxPage] = useState<number>(1);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalEntity, setModalEntity] = useState<ModalType>(ModalType.mteQuestion);
+  const [modalAction, setModalAction] = useState<ModalType>(ModalType.mtaEdit);
+  const [editingPubli, setEditingPubli] = useState<EditingPubliType>(null);
 
   const minPage = 1;
 
@@ -32,17 +35,6 @@ const Answers = ({userId}:AnswersI) => {
   const history= useHistory();
 
   useEffect(()=>{
-    const handleSearchQuestion = async ()=>{
-      try{
-        const res = await api.get(`question/show/${id}?user=${userId}`);
-        setQuestion(res.data.question);
-
-      }catch(err){
-        alert('Erro ao carregar a página!');
-        history.goBack();
-      }
-    }
-
     handleSearchQuestion();
     /* eslint-disable-next-line */
   },[])
@@ -52,6 +44,7 @@ const Answers = ({userId}:AnswersI) => {
       document.body.style.overflow = 'hidden'
     }else{
       document.body.style.overflow = 'auto';
+      handleSearchQuestion();
       handleSearchAnswers(page);
     }
   //eslint-disable-next-line
@@ -61,6 +54,17 @@ const Answers = ({userId}:AnswersI) => {
     handleSearchAnswers(page);
     /* eslint-disable-next-line */
   },[page])
+
+  const handleSearchQuestion = async ()=>{
+    try{
+      const res = await api.get(`question/show/${id}?user=${userId}`);
+      setQuestion(res.data.question);
+
+    }catch(err){
+      alert('Erro ao carregar a página!');
+      history.goBack();
+    }
+  }
 
   const handleSearchAnswers = async(searchPage:number)=>{
     try{
@@ -76,10 +80,17 @@ const Answers = ({userId}:AnswersI) => {
     }
   }
 
+  const handleOpenModal = (entity:ModalType,action:ModalType,editingData:EditingPubliType = null)=>{
+    setModalEntity(entity);
+    setModalAction(action);
+    setEditingPubli(editingData)
+    setShowModal(true);
+  }
+
   return (
     <Layout>
       {question && (
-        <Modal show={showModal} setShow={(b:boolean)=>setShowModal(b)} question={question.id} type={{entity:ModalType.mteAnswer,action:ModalType.mtaCreate}}/>
+        <Modal show={showModal} setShow={(b:boolean)=>setShowModal(b)} question={question.id} type={{entity:modalEntity,action:modalAction}} publiData={editingPubli}/>
       )}
       <div className="md:px-32 px-10 py-20">
         <div className="mb-6 cursor-pointer">
@@ -93,10 +104,21 @@ const Answers = ({userId}:AnswersI) => {
           </div>
         </div>
         {question && (
-          <Question title={question.title} text={question.text} when={question.when} user={question.user} likes={question.likes} id={question.id} hasLikedSt={question.hasLiked} hasCreated={question.hasCreated} postDelete={()=>history.goBack()} alone={true}/>
+          <Question
+            title={question.title}
+            text={question.text}
+            when={question.when}
+            user={question.user}
+            likes={question.likes}
+            id={question.id}
+            hasLikedSt={question.hasLiked}
+            hasCreated={question.hasCreated}
+            postDelete={()=>history.goBack()}
+            callEdit={()=>handleOpenModal(ModalType.mteQuestion,ModalType.mtaEdit,{id:question.id,title:question.title,text:question.text})}
+            alone={true}/>
         )}
         <h1 className="text-secundary text-3xl font-bold">Respostas:</h1>
-        <ButtonCreate action={()=>setShowModal(!showModal)} text={'Nova resposta'}/>
+        <ButtonCreate action={()=>handleOpenModal(ModalType.mteAnswer,ModalType.mtaCreate)} text={'Nova resposta'}/>
         <Filters 
           paramOrder={paramOrder}
           kindOrder={kindOrder}
@@ -107,7 +129,17 @@ const Answers = ({userId}:AnswersI) => {
         />
         <div className="flex flex-col mt-12 ml-10 md:ml-24 lg:ml-48">
           {answers.map(a=>{
-            return <Answer text={a.text} when={a.when} user={a.user} likes={a.likes} id={a.id} hasLikedSt={a.hasLiked} hasCreated={a.hasCreated} postDelete={()=>handleSearchAnswers(page)} key={a.id}/>
+            return <Answer
+                    text={a.text}
+                    when={a.when}
+                    user={a.user}
+                    likes={a.likes}
+                    id={a.id}
+                    hasLikedSt={a.hasLiked}
+                    hasCreated={a.hasCreated}
+                    postDelete={()=>handleSearchAnswers(page)} key={a.id}
+                    callEdit={()=>handleOpenModal(ModalType.mteAnswer,ModalType.mtaEdit,{id:a.id,title:'',text:a.text})}
+                    />
           })}
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-end">
