@@ -27,7 +27,7 @@ export default function Register() {
 
   const history = useHistory();
 
-  const handleDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)=>{
+  const handleDataChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLTextAreaElement>)=>{
     const { name, value } = event.target;
     if (name === 'level') {
       setData({ ...data, [name]: Number(value) });

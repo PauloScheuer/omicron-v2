@@ -11,6 +11,7 @@
     "db-r": "knex migrate:rollback",
     "db-r-all": "knex migrate:rollback --all",
     "db-s": "knex --knexfile knexfile.ts seed:run",
+    "db-reset":"yarn db-r-all && yarn db && yarn db-s",
     "build": "tsc",
     "heroku-postbuild": "cd client && yarn && yarn build"
   },

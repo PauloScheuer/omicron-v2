@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import knex from '../database/connection';
+import { KindOrderType, ParamOrderType } from '../utils/types';
 
 class QuestionController {
   async create(req: Request, res: Response) {
@@ -12,10 +13,10 @@ class QuestionController {
       if (userExists.length === 0) {
         throw new Error('Usuário não existe');
       }
-      const contentExists = await knex('contents')
+      const contentData = await knex('contents')
         .select('*')
-        .where('idContent', '=', content);
-      if (contentExists.length === 0) {
+        .where('indexContent', '=', content);
+      if (contentData.length === 0) {
         throw new Error('Conteúdo não existe');
       }
 
@@ -26,7 +27,7 @@ class QuestionController {
         textQuestion: text,
         whenQuestion: when,
         idUser: user,
-        idContent: content,
+        idContent: contentData[0].idContent,
       };
       const idQuestion = await knex('questions')
         .insert(newQuestion)
@@ -55,19 +56,50 @@ class QuestionController {
   async show(req: Request, res: Response) {
     try {
       const id = req.params.id;
-      const questionExists = await knex('questions')
-        .select('*')
-        .where('idQuestion', '=', id);
-      if (questionExists.length === 0) {
+      const user = Number(req.query.user);
+
+      const data = await knex.with('new_table',aux=>{
+        aux.from('questions')
+        .join('users','users.idUser','=','questions.idUser')
+        .join('contents','contents.idContent','=','questions.idContent')
+        .leftJoin('likes','likes.idQuestion','=','questions.idQuestion')
+        .select(
+          'questions.idQuestion',
+          'titleQuestion',
+          'textQuestion',
+          'nameUser',
+          'questions.idUser',
+          'whenQuestion',
+          'idLike',
+          {'userLiked':knex.raw('likes.idUser = ?',[user])}
+        )
+        .rank('rank', knex.raw('order by ?? desc', [knex.raw('likes.idUser = ?',[user])]))
+        .where('questions.idQuestion', '=', id)
+      })
+      .select(
+        '*',
+        {'likes':knex.raw('COUNT(idLike)')}
+      )
+      .having('rank','=',1)
+      .groupBy('idQuestion')
+      .from('new_table');
+      
+      if (data.length === 0) {
         throw new Error('Questão não existe');
       }
 
-      const data = await knex('questions')
-        .select()
-        .where('idQuestion', '=', id);
-      res
-        .status(200)
-        .send({ message: 'Questão encontrada', question: data[0] });
+      const question = {
+          title:data[0].titleQuestion,
+          text:data[0].textQuestion,
+          when:data[0].whenQuestion,
+          user:data[0].nameUser,
+          id:data[0].idQuestion,
+          likes:data[0].likes || 0,
+          hasLiked:data[0].userLiked > 0,
+          hasCreated:data[0].idUser === user
+        }
+
+      res.status(200).send({ message: 'Questão encontrada', question});
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }
@@ -85,21 +117,71 @@ class QuestionController {
       const content = Number(req.query.content);
       const user = Number(req.query.user);
 
-      const data = await knex('questions')
-        .select()
-        .limit(perPage)
-        .offset(offset)
-        .where('idContent', '=', content)
-        .or.where('idUser', '=', user)
-        .orderBy('whenQuestion', 'desc');
+      const total = await knex('questions').select('idQuestion',{count:knex.raw('COUNT(idQuestion)')})
+        .join('contents','contents.idContent','=','questions.idContent')
+        .where('indexContent', '=', content);
 
-      if (data.length === 0) {
-        throw new Error('Questões não encontradas');
+      const pages = Math.ceil(Number(total[0].count) / perPage);
+
+      let order;
+      let by;
+      if(Number(req.query.order) == ParamOrderType.date){
+        order = 'whenQuestion'
+      }else{
+        order = 'likes'
       }
+
+      if(Number(req.query.by) == KindOrderType.asc){
+        by = 'asc'
+      }else{
+        by = 'desc'
+      }
+
+      const data = await knex.with('new_table',aux=>{
+        aux.from('questions')
+        .join('users','users.idUser','=','questions.idUser')
+        .join('contents','contents.idContent','=','questions.idContent')
+        .leftJoin('likes','likes.idQuestion','=','questions.idQuestion')
+        .select(
+          'questions.idQuestion',
+          'titleQuestion',
+          'textQuestion',
+          'nameUser',
+          'questions.idUser',
+          'whenQuestion',
+          'likes.idLike',
+          {'userLiked':knex.raw('likes.idUser = ?',[user])},
+        )
+        .where('indexContent', '=', content)
+        .rank('rank', knex.raw('partition by ?? order by ?? desc', ['questions.idQuestion',knex.raw('likes.idUser = ?',[user])]))
+      })
+      .select(
+        '*',
+        {'likes':knex.raw('COUNT(idLike)')}
+      )
+      .groupByRaw('idQuestion')
+      .having('rank','=',1)
+      .limit(perPage)
+      .offset(offset)
+      .orderBy(order, by)
+      .from('new_table')
+
+      const questions = data.map(q=>{
+        return{
+          title:q.titleQuestion,
+          text:q.textQuestion,
+          when:q.whenQuestion,
+          user:q.nameUser,
+          id:q.idQuestion,
+          likes:q.likes || 0,
+          hasLiked:q.userLiked > 0,
+          hasCreated:q.idUser === user
+        }
+      })
 
       res
         .status(200)
-        .send({ message: 'Questões encontradas', questions: data });
+        .send({ message: 'Questões encontradas', questions, pages});
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import knex from '../database/connection';
+import { KindOrderType, ParamOrderType } from '../utils/types';
 
 class AnswerController {
   async create(req: Request, res: Response) {
@@ -77,21 +78,67 @@ class AnswerController {
         perPage = Number(req.query.perPage);
       }
       const offset = page * perPage - perPage;
-      const question = Number(req.query.question);
+      const question = Number(req.params.id);
       const user = Number(req.query.user);
-      const data = await knex('answers')
-        .select()
-        .limit(perPage)
-        .offset(offset)
-        .where('idQuestion', '=', question)
-        .or.where('idUser', '=', user)
-        .orderBy('whenAnswer', 'desc');
 
-      if (data.length === 0) {
-        throw new Error('Sem respostas');
+      const total = await knex('answers').count()
+        .where('idQuestion', '=', question);
+      const pages = Math.ceil(Number(total[0]['count(*)']) / perPage);
+
+      let order;
+      let by;
+      if(Number(req.query.order) == ParamOrderType.date){
+        order = 'whenAnswer'
+      }else{
+        order = 'likes'
       }
 
-      res.status(200).send({ message: 'Respostas encontradas', answers: data });
+      if(Number(req.query.by) == KindOrderType.asc){
+        by = 'asc'
+      }else{
+        by = 'desc'
+      }
+
+      const data = await knex.with('new_table',aux=>{
+        aux.from('answers')
+        .join('users','users.idUser','=','answers.idUser')
+        .leftJoin('likes','likes.idAnswer','=','answers.idAnswer')
+        .select(
+          'answers.idAnswer',
+          'textAnswer',
+          'nameUser',
+          'answers.idUser',
+          'whenAnswer',
+          'likes.idLike',
+          {'userLiked':knex.raw('likes.idUser = ?',[user])},
+        )
+        .where('answers.idQuestion', '=', question)
+        .rank('rank', knex.raw('partition by ?? order by ?? desc', ['answers.idAnswer',knex.raw('likes.idUser = ?',[user])]))
+      })
+      .select(
+        '*',
+        {'likes':knex.raw('COUNT(idLike)')}
+      )
+      .groupByRaw('idAnswer')
+      .having('rank','=',1)
+      .limit(perPage)
+      .offset(offset)
+      .orderBy(order, by)
+      .from('new_table')
+
+      const answers = data.map(a=>{
+        return{
+          id:a.idAnswer,
+          text:a.textAnswer,
+          when:a.whenAnswer,
+          user:a.nameUser,
+          likes: a.likes || 0,
+          hasLiked: a.userLiked > 0,
+          hasCreated: a.idUser === user
+        }
+      })
+
+      res.status(200).send({ message: 'Respostas encontradas', answers, pages});
     } catch (err) {
       res.status(400).send({ message: 'Operação não realizada - ' + err });
     }

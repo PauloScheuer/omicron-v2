@@ -2,6 +2,8 @@ import React from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import math from '../../assets/images/math.svg';
 
+
+
 export default function Initial() {
   return (
     <section className="h-screen md:pl-40 md:pr-40 flex flex-col items-center -mt-28">
