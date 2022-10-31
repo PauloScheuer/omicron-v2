@@ -7,7 +7,7 @@
 
 - Calculadoras passo-a-passo de diferentes conteúdos (disponibilizadas junto a breves explicações acerca do conteúdo)
 - Conteúdo interdisciplinar (na forma de curiosidades, como a história de personagens marcantes na história da matemática)
-- Fórum de perguntas e respostas (em desenvolvimento %)
+- Fórum de perguntas e respostas
 
 ----------------
 
