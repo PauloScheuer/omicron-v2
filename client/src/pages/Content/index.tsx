@@ -39,7 +39,7 @@ const Content = () => {
                     kind={CardType.cdContentText}
                     />
             </div>
-            <Link to='/forum' className="flex justify-center items-center mt-20">
+            <Link to={'/forum/'+index} className="flex justify-center items-center mt-20">
               <span className="font-bold text-primaryDark text-xl ">Ir para o fórum de {content?.nameContent}</span>
               <FiArrowRight
                 className="text-secundary"
