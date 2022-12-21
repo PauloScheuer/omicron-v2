@@ -95,7 +95,7 @@ const Forum = ({userId}:ForumI) => {
           </div>
         </Link>
         <h1 className="text-secundary text-4xl font-bold mt-6">Fórum sobre {content.nameContent || 'conteúdo'}</h1>
-        <ButtonCreate action={()=>handleOpenModal(ModalType.mteQuestion,ModalType.mtaCreate)} text={'Nova pergunta'}/>
+        <ButtonCreate action={()=>handleOpenModal(ModalType.mteQuestion,ModalType.mtaCreate)} enabled={userId !== 0} text={'Nova pergunta'}/>
         <Filters 
           paramOrder={paramOrder} 
           kindOrder={kindOrder} 

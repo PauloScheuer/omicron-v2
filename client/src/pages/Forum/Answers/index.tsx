@@ -118,7 +118,7 @@ const Answers = ({userId}:AnswersI) => {
             alone={true}/>
         )}
         <h1 className="text-secundary text-3xl font-bold">Respostas:</h1>
-        <ButtonCreate action={()=>handleOpenModal(ModalType.mteAnswer,ModalType.mtaCreate)} text={'Nova resposta'}/>
+        <ButtonCreate action={()=>handleOpenModal(ModalType.mteAnswer,ModalType.mtaCreate)} enabled={userId !== 0} text={'Nova resposta'}/>
         <Filters 
           paramOrder={paramOrder}
           kindOrder={kindOrder}
