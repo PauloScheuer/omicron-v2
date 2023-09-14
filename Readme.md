@@ -1,17 +1,17 @@
 # Omicron
-## Software web voltado ao aprendizado de Matemática por alunos do ensino médio
+## Web application designed to help high school students studying math
 
 ----------------
 
-### Existem 3 funcionalidades principais no sistema:
+### Main functionalities:
 
-- Calculadoras passo-a-passo de diferentes conteúdos (disponibilizadas junto a breves explicações acerca do conteúdo)
-- Conteúdo interdisciplinar (na forma de curiosidades, como a história de personagens marcantes na história da matemática)
-- Fórum de perguntas e respostas
+- Step-by-step calculators for different contents, alongside with small text explanations about them;
+- Interdisciplinary content (such as curiosities about important names in math history);
+- Question and answer forum.
 
 ----------------
 
-### Principais tecnologias utilizadas:
+### Main technologies:
 
 - Node.js
 - ReactJS
@@ -19,7 +19,3 @@
 - Express
 - Redux
 - Tailwind CSS
-
-----------------
-
-Para efeitos de comparação, ver https://github.com/PauloScheuer/omicron, versão original do sistema desenvolvida para o TCC do curso Técnico em Informática no Instituto Federal Farroupilha
